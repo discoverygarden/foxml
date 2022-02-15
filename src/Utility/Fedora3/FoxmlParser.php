@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3;
+namespace Drupal\foxml\Utility\Fedora3;
 
-use Drupal\dgi_migrate\Utility\Fedora3\Element\DigitalObject;
+use Drupal\foxml\Utility\Fedora3\Element\DigitalObject;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -43,7 +43,7 @@ class FoxmlParser extends AbstractParser {
   /**
    * The parsed document.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\Element\DigitalObject
+   * @var \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
    */
   protected $output = NULL;
 
@@ -57,7 +57,7 @@ class FoxmlParser extends AbstractParser {
   /**
    * Datastream storage service.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\LowLevelAdapterInterface
+   * @var \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface
    */
   protected $datastreamStorage;
 
@@ -146,7 +146,7 @@ class FoxmlParser extends AbstractParser {
    * @param string $target
    *   A path/URL of a FOXML document to parse.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\Element\DigitalObject
+   * @return \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
    *   The parsed document.
    */
   public function parse($target) {

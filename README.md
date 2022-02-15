@@ -1,4 +1,4 @@
-# DGI Migrate
+# FOXML Utilities
 
 ## Introduction
 
@@ -6,20 +6,9 @@ A module to facilitate I7 to I8 migraiton.
 
 ## Requirements
 
-This module requires the following modules/libraries:
-
-* [migrate](https://www.drupal.org/project/migrate)
-* [migrate_plus](https://www.drupal.org/project/migrate_plus)
-* [migrate_directory](https://www.drupal.org/project/migrate_directory)
-* [islandora](https://github.com/Islandora/islandora/tree/8.x-1.x)
 
 ## Usage
 
-An improved migration import command `migrate:batch-import` is included.
-An example FOXML migration that can be used as a starting point is provided.
-It illustrates the usage of migrate plugins that have been created to
-facilitate FOXML and large data processesing.
-* `dgi_migrate.process.xml.xpath` is limited to xpath 1.0.
 
 ## Installation
 

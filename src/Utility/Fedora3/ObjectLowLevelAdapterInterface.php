@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3;
+namespace Drupal\foxml\Utility\Fedora3;
 
 /**
  * Object low-level adapter interface.
@@ -13,7 +13,7 @@ interface ObjectLowLevelAdapterInterface extends LowLevelAdapterInterface, \Iter
    * @return \Iterator|\Traversable
    *   The iterator.
    *
-   * @throws \Drupal\dgi_migrate\Utility\Fedora3\NotImplementedException if the given low-level storage has not
+   * @throws \Drupal\foxml\Utility\Fedora3\NotImplementedException if the given low-level storage has not
    *   implemented the capability.
    */
   public function getIterator();

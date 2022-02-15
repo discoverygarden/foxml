@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3\Element;
+namespace Drupal\foxml\Utility\Fedora3\Element;
 
-use Drupal\dgi_migrate\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\AbstractParser;
 
 /**
  * Element handler for foxml:datastream.
@@ -16,7 +16,7 @@ class Datastream extends AbstractParser implements \ArrayAccess {
   /**
    * The array of versions present for the given datastream.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\Element\DatastreamVersion[]
+   * @var \Drupal\foxml\Utility\Fedora3\Element\DatastreamVersion[]
    */
   protected $versions = [];
 
@@ -53,7 +53,7 @@ class Datastream extends AbstractParser implements \ArrayAccess {
   /**
    * Accessor for the latest datastream version represented.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\Element\DatastreamVersion
+   * @return \Drupal\foxml\Utility\Fedora3\Element\DatastreamVersion
    *   The latest datastream version.
    */
   public function latest() {

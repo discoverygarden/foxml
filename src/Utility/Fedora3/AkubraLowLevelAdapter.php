@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utilty\Fedora3;
+namespace Drupal\foxml\Utilty\Fedora3;
 
 class AkubraLowLevelAdapter implements LowLevelAdapterInterface {
 

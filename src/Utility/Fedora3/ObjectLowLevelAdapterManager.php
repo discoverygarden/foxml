@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3;
+namespace Drupal\foxml\Utility\Fedora3;
 
 /**
  * Object low-level adapter service collector.

@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3\Element;
+namespace Drupal\foxml\Utility\Fedora3\Element;
 
-use Drupal\dgi_migrate\Utility\Fedora3\AbstractParser;
-use Drupal\dgi_migrate\Utility\Substream;
+use Drupal\foxml\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Substream;
 
 /**
  * Abstract element handler for inline content.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility;
+namespace Drupal\foxml\Utility;
 
 use Drupal\Core\StreamWrapper\ReadOnlyStream;
 use const iqb\stream\SUBSTREAM_SCHEME;
@@ -12,7 +12,7 @@ use const iqb\stream\SUBSTREAM_SCHEME;
  * substream to be pulled to be specified as a URI.
  */
 class Substream extends ReadOnlyStream {
-  const SCHEME = 'dgi-migrate.substream';
+  const SCHEME = 'foxml.substream';
 
   /**
    * The target resource from which to extract the substream.

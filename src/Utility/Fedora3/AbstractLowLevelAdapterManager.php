@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3;
+namespace Drupal\foxml\Utility\Fedora3;
 
-use Drupal\dgi_migrate\Utility\Fedora3\Exceptions\LowLevelDereferenceFailedException;
-use Drupal\dgi_migrate\Utility\Fedora3\Exceptions\MissingLowLevelStorageAdapterException;
+use Drupal\foxml\Utility\Fedora3\Exceptions\LowLevelDereferenceFailedException;
+use Drupal\foxml\Utility\Fedora3\Exceptions\MissingLowLevelStorageAdapterException;
 
 abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterface {
 
@@ -14,7 +14,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
   /**
    * Hacky "generics" approach.
    *
-   * @param \Drupal\dgi_migrate\Utility\Fedora3\LowLevelAdapterInterface $adapter
+   * @param \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface $adapter
    *   The adapter to test.
    *
    * @throws \InvalidArgumentException if the interface does not match.
@@ -26,7 +26,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
   /**
    * Service collector callback; add the adapter.
    *
-   * @param \Drupal\dgi_migrate\Utility\Fedora3\LowLevelAdapterInterface $adapter
+   * @param \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface $adapter
    *   The adapter to add.
    * @param int $priority
    *   The priority of the adapter.
@@ -44,7 +44,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
   /**
    * Get a sorted array of the adapters.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\LowLevelAdapterInterface[]
+   * @return \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]
    *   The sorted array of adapters.
    */
   protected function sortAdapters() {
@@ -61,7 +61,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
   /**
    * Gets the adapters, sorted and memoized.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\LowLevelAdapterInterface[]
+   * @return \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]
    *   The array of adapters.
    */
   protected function sorted() {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3;
+namespace Drupal\foxml\Utility\Fedora3;
 
 /**
  * Abstract (FO)XML parser.
@@ -18,7 +18,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * The parser instance parsing.
    *
-   * @var \Drupal\dgi_migrate\Utility\FoxmlParser
+   * @var \Drupal\foxml\Utility\FoxmlParser
    */
   protected $foxmlParser;
 
@@ -32,7 +32,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Parser state for this element; the stack of elements.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\ParserInterface[]
+   * @var \Drupal\foxml\Utility\Fedora3\ParserInterface[]
    */
   protected $stack = [];
 
@@ -46,7 +46,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Get the current element being processed.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\ParserInterface
+   * @return \Drupal\foxml\Utility\Fedora3\ParserInterface
    *   The current element being processed.
    */
   protected function current() {
@@ -56,7 +56,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Push another element onto the stack being parsed.
    *
-   * @param \Drupal\dgi_migrate\Utility\Fedora3\ParserInterface $new
+   * @param \Drupal\foxml\Utility\Fedora3\ParserInterface $new
    *   The new element.
    */
   protected function push(ParserInterface $new) {
@@ -66,7 +66,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Pop the finished element off of the stack.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\ParserInterface
+   * @return \Drupal\foxml\Utility\Fedora3\ParserInterface
    *   A fully parsed element.
    */
   protected function pop() {
@@ -78,7 +78,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Constructor.
    *
-   * @param \Drupal\dgi_migrate\Utility\FoxmlParser $foxml_parser
+   * @param \Drupal\foxml\Utility\FoxmlParser $foxml_parser
    *   The root parser parsing.
    * @param string[] $attributes
    *   The attributes for the given element.
@@ -98,7 +98,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Get the root parser.
    *
-   * @return \Drupal\dgi_migrate\Utility\FoxmlParser
+   * @return \Drupal\foxml\Utility\FoxmlParser
    *   The root parser... essentially so XmlContent and BinaryContent can
    *   determine their offsets.
    */

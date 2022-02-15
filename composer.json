@@ -1,11 +1,8 @@
 {
-    "name": "discoverygarden/dgi_migrate",
+    "name": "discoverygarden/foxml",
     "type": "drupal-module",
     "license": "GPL-3.0-only",
     "require": {
-      "iqb/substream": "dev-master",
-      "drupal/migrate_directory": "^1",
-      "drupal/migrate_plus": "^4.2",
-      "symfony/mime": "^5"
+      "iqb/substream": "dev-master"
     }
 }

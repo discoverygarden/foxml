@@ -1,0 +1,34 @@
+---
+services:
+  foxml.substream.stream_wrapper:
+    class: Drupal\foxml\Utility\Substream
+    tags:
+      - name: stream_wrapper
+        scheme: foxml.substream
+      - name: stream_wrapper
+        # XXX: Maintained for backwards-compatibility.
+        scheme: dgi-migrate.substream
+  foxml.parser:
+    class: Drupal\foxml\Utility\Fedora3\FoxmlParser
+    arguments:
+      - '@cache.foxml_parsed'
+      - '@foxml.parser.datastream_lowlevel_storage'
+  cache.foxml_parsed:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - name: cache.bin
+    factory: cache_factory:get
+    arguments:
+      - foxml_parsed
+  foxml.parser.object_lowlevel_storage:
+    class: Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterManager
+    tags:
+      - name: service_collector
+        tag: foxml.parser.object_lowlevel_storage
+        call: addAdapter
+  foxml.parser.datastream_lowlevel_storage:
+    class: Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterManager
+    tags:
+      - name: service_collector
+        tag: foxml.parser.datastream_lowlevel_storage
+        call: addAdapter
