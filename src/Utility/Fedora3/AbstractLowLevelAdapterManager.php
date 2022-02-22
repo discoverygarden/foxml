@@ -40,7 +40,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
    * @throws \InvalidArgumentException
    *   If the interface does not match.
    */
-  protected function matchesInterface(LowLevelAdapterInterface $adapter) {
+  protected function matchesInterface(LowLevelAdapterInterface $adapter) : void {
     // No-op.
   }
 

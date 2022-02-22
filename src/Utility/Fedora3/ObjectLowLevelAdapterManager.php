@@ -10,7 +10,7 @@ class ObjectLowLevelAdapterManager extends AbstractLowLevelAdapterManager implem
   /**
    * {@inheritdoc}
    */
-  protected function matchesInterface(LowLevelAdapterInterface $adapter) {
+  protected function matchesInterface(LowLevelAdapterInterface $adapter) : void {
     if (!($adapter instanceof ObjectLowLevelAdapterInterface)) {
       throw new \InvalidArgumentException('Adapter is not instance of ObjectLowLevelAdapterInterface.');
     }
