@@ -14,7 +14,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Parse FOXML.
+ * Migration process plugin to parse FOXML.
  *
  * @MigrateProcessPlugin(
  *   id = "foxml.parse"
