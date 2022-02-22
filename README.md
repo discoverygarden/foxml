@@ -6,9 +6,19 @@ A module to facilitate I7 to I8 migraiton.
 
 ## Requirements
 
+None.
 
 ## Usage
 
+This module provides:
+
+### Migrate source plugin `foxml`
+
+This `foxml` plugin operates based on iterating over an "objectStore" implementation.
+
+### Migrate process plugin `foxml.parse`
+
+Expected to be passed the path to the FOXML to parse.
 
 ## Installation
 
