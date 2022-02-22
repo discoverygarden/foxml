@@ -26,6 +26,14 @@ Install as usual, see
 [this](https://drupal.org/documentation/install/modules-themes/modules-8) for
 further information.
 
+Additionally, there's some configuration to be done if wanting to use the
+"Archival FOXML" migration:
+
+|Key|Description|Default|
+|---|---|---|
+|`foxml_archival_object_basepath`|The path to the export of archival FOXML over which to iterate.|`private://exports`|
+|`foxml_archival_object_file_pattern`|A regex pattern against which to match files.|`NULL` (none necessary; defaulting to iterate over _ALL_ files)|
+
 ## Troubleshooting/Issues
 
 Having problems or solved a problem? Contact
