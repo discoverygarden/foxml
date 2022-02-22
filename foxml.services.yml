@@ -5,9 +5,6 @@ services:
     tags:
       - name: stream_wrapper
         scheme: foxml.substream
-      - name: stream_wrapper
-        # XXX: Maintained for backwards-compatibility.
-        scheme: dgi-migrate.substream
   foxml.parser:
     class: Drupal\foxml\Utility\Fedora3\FoxmlParser
     arguments:
@@ -32,3 +29,10 @@ services:
       - name: service_collector
         tag: foxml.parser.datastream_lowlevel_storage
         call: addAdapter
+  foxml.archival.object_lowlevel_storage:
+    class: Drupal\foxml\Utility\Fedora3\ArchivalObjectLowLevelAdapter
+    arguments:
+      - '@settings'
+    tags:
+      - name: foxml.parser.object_lowlevel_storage
+        priority: -10

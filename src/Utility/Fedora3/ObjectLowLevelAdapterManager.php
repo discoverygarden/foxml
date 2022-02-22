@@ -5,7 +5,7 @@ namespace Drupal\foxml\Utility\Fedora3;
 /**
  * Object low-level adapter service collector.
  */
-class ObjectLowLevelAdapterManager extends AbstractLowLevelAdapterManager {
+class ObjectLowLevelAdapterManager extends AbstractLowLevelAdapterManager implements ObjectLowLevelAdapterInterface {
 
   /**
    * {@inheritdoc}
@@ -16,6 +16,22 @@ class ObjectLowLevelAdapterManager extends AbstractLowLevelAdapterManager {
     }
 
     parent::matchesInterface($adapter);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIterator() : \Traversable {
+    $this->valid();
+
+    return reset($this->validAdapters);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIteratorType() : int {
+    return $this->getIterator()->getIteratorType();
   }
 
 }

@@ -57,7 +57,7 @@ class FoxmlParser extends AbstractParser {
   /**
    * Datastream storage service.
    *
-   * @var \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface
+   * @var \Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface
    */
   protected $datastreamStorage;
 
@@ -129,7 +129,16 @@ class FoxmlParser extends AbstractParser {
     }
   }
 
-  public function getDatastreamLowLevelAdapter() {
+  /**
+   * Get the datastream low-level adapter.
+   *
+   * @return \Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface
+   *   The adapter, if configured.
+   *
+   * @throws \Exception
+   *   If there is no storage configured.
+   */
+  public function getDatastreamLowLevelAdapter() : DatastreamLowLevelAdapterInterface {
     if (is_null($this->validDatastreamStorage)) {
       $this->validDatastreamStorage = $this->datastreamStorage->valid();
     }

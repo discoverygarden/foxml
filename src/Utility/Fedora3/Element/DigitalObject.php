@@ -153,7 +153,9 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   protected function xpath() {
     if (!isset($this->xpath)) {
       $this->dom = new \DOMDocument();
-      $this->dom->load($this['RELS-EXT']->getUri());
+      // XXX: An issue in the passing off of paths/URIs to libxml prevents the
+      // use of DOMDocument::load().
+      $this->dom->loadXML(file_get_contents($this['RELS-EXT']->getUri()));
       $this->xpath = new \DOMXPath($this->dom);
       $ns = [
         'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',

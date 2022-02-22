@@ -16,15 +16,15 @@ interface LowLevelAdapterInterface {
    * @return string
    *   A URI/path to the given resource.
    */
-  public function dereference($id);
+  public function dereference($id) : string;
 
   /**
    * Check if the given adapter is ready to operate.
    *
    * @return bool
-   *   TRUE if the given adapter is configured and ready to ::dereference() things;
-   *   otherwise, FALSE.
+   *   TRUE if the given adapter is configured and ready to ::dereference()
+   *   things; otherwise, FALSE.
    */
-  public function valid();
+  public function valid() : bool;
 
 }

@@ -15,6 +15,32 @@ class ContentLocation extends AbstractParser {
   const TAG = 'foxml:contentLocation';
 
   /**
+   * The URI to the content.
+   *
+   * @var string
+   */
+  protected $uri = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function close() {
+    // XXX: Memoize the URI, as later closing will lose access to the parser.
+    $this->getUri();
+
+    parent::close();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    return array_merge(parent::__sleep(), [
+      'uri',
+    ]);
+  }
+
+  /**
    * Helper to fetch the URI.
    *
    * @return string
@@ -24,15 +50,19 @@ class ContentLocation extends AbstractParser {
    *   If the location refers to an internal URI.
    */
   public function getUri() {
-    if ($this->TYPE === 'URL') {
-      return $this->REF;
+    if ($this->uri === NULL) {
+      if ($this->TYPE === 'URL') {
+        $this->uri = $this->REF;
+      }
+      elseif ($this->TYPE === 'INTERNAL_ID') {
+        $this->uri = $this->getFoxmlParser()->getDatastreamLowLevelAdapter()->dereference($this->REF);
+      }
+      else {
+        throw new \Exception('Unhandled type.');
+      }
     }
-    elseif ($this->TYPE === 'INTERNAL_ID') {
-      return $this->getFoxmlParser()->getDatastreamLowLevelAdapter()->dereference($this->REF);
-    }
-    else {
-      throw new \Exception('Unhandled type.');
-    }
+
+    return $this->uri;
   }
 
 }

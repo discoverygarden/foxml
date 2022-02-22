@@ -5,10 +5,30 @@ namespace Drupal\foxml\Utility\Fedora3;
 use Drupal\foxml\Utility\Fedora3\Exceptions\LowLevelDereferenceFailedException;
 use Drupal\foxml\Utility\Fedora3\Exceptions\MissingLowLevelStorageAdapterException;
 
+/**
+ * Abstract adapter manager/service collector.
+ */
 abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterface {
 
+  /**
+   * Collected adapters in buckets based on priority.
+   *
+   * @var array
+   */
   protected $adapters = [];
+
+  /**
+   * Sorted array of adapters, or NULL.
+   *
+   * @var \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]|null
+   */
   protected $sortedAdapters = NULL;
+
+  /**
+   * Sorted array of valid adapters, or NULL.
+   *
+   * @var \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]|null
+   */
   protected $validAdapters = NULL;
 
   /**
@@ -17,10 +37,11 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
    * @param \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface $adapter
    *   The adapter to test.
    *
-   * @throws \InvalidArgumentException if the interface does not match.
+   * @throws \InvalidArgumentException
+   *   If the interface does not match.
    */
   protected function matchesInterface(LowLevelAdapterInterface $adapter) {
-    // No-op,
+    // No-op.
   }
 
   /**
@@ -36,7 +57,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
    */
   public function addAdapter(LowLevelAdapterInterface $adapter, $priority = 0) {
     $this->matchesInterface($adapter);
-    $adapters[$priority][] = $adapter;
+    $this->adapters[$priority][] = $adapter;
 
     return $this;
   }
@@ -47,7 +68,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
    * @return \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]
    *   The sorted array of adapters.
    */
-  protected function sortAdapters() {
+  protected function sortAdapters() : array {
     $sorted = [];
 
     krsort($this->adapters);
@@ -64,16 +85,17 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
    * @return \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]
    *   The array of adapters.
    */
-  protected function sorted() {
-    return $this->sortedAdapters ??= $this->sortAdapters();
+  protected function sorted() : array {
+    $this->sortedAdapters = $this->sortedAdapters ?? $this->sortAdapters();
+    return $this->sortedAdapters;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function valid() {
+  public function valid() : bool {
     if ($this->validAdapters === NULL) {
-      $this->validAdapaters = array_filter($this->sorted(), function (LowLevelAdapterInterface $interface) {
+      $this->validAdapters = array_filter($this->sorted(), function (LowLevelAdapterInterface $interface) {
         return $interface->valid();
       });
     }
@@ -84,7 +106,7 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
   /**
    * {@inheritdoc}
    */
-  public function dereference($id) {
+  public function dereference($id) : string {
     if (!$this->valid()) {
       throw new MissingLowLevelStorageAdapterException();
     }
@@ -101,4 +123,5 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
 
     throw new LowLevelDereferenceFailedException($id);
   }
+
 }
