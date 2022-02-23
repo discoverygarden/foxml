@@ -84,20 +84,16 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
   }
 
   /**
-   * Helper; generate PIDs for our object source.
+   * Helper; generate IDs for our object source.
    *
    * @return \Traversable
-   *   The PID iterator.
+   *   The ID iterator.
    *
    * @throws \InvalidArgumentException when the
    *   ::objectStorage->getIteratorType() is not handled.
    */
-  protected function generatePids() : \Traversable {
-    if ($this->objectStorage->getIteratorType() === ObjectLowLevelAdapterInterface::ITERATOR_PID) {
-      return $this->objectStorage->getIterator();
-    }
-
-    throw new \InvalidArgumentException('Unrecognized ::getIteratorType() value.');
+  protected function generateIds() : \Traversable {
+    return $this->objectStorage->getIterator();
   }
 
   /**
@@ -109,12 +105,8 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    *   - uses the generated PIDs and dereferences them as they're called for.
    */
   protected function generatePaths() : \Traversable {
-    if ($this->objectStorage->getIteratorType() === ObjectLowLevelAdapterInterface::ITERATOR_PATH) {
-      return $this->objectStorage->getIterator();
-    }
-
-    foreach ($this->generatePids() as $key => $pid) {
-      yield $key => $this->objectStorage->dereference($pid);
+    foreach ($this->generateIds() as $id) {
+      yield $id => $this->objectStorage->dereference($id);
     }
   }
 
@@ -127,12 +119,8 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    *   called for.
    */
   protected function generateFileinfo() : \Traversable {
-    if ($this->objectStorage->getIteratorType() === ObjectLowLevelAdapterInterface::ITERATOR_SPLFILEINFO) {
-      return $this->objectStorage->getIterator();
-    }
-
-    foreach ($this->generatePaths() as $key => $path) {
-      yield $key => (new \SplFileInfo($path));
+    foreach ($this->generatePaths() as $id => $path) {
+      yield $id => (new \SplFileInfo($path));
     }
   }
 
@@ -141,6 +129,8 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    *
    * @param \SplFileInfo $fileinfo
    *   The instance to be mapped.
+   * @param string $id
+   *   The ID with which to build out URIs.
    *
    * @return array
    *   An associative array containing:
@@ -151,14 +141,14 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    *   - extension: The file's extension.
    *   - uri: A URI to the file.
    */
-  protected static function mapSplfileinfoToArray(\SplFileInfo $fileinfo) : array {
+  protected static function mapSplfileinfoToArray(\SplFileInfo $fileinfo, $id) : array {
     return [
       'path' => $fileinfo->getPathname(),
       'absolute_path' => $fileinfo->getRealPath(),
       'filename' => $fileinfo->getFilename(),
       'basename' => $fileinfo->getBasename(),
       'extension' => $fileinfo->getExtension(),
-      'uri' => "file://{$fileinfo->getRealPath()}",
+      'uri' => "foxml://object/{$id}",
     ];
   }
 
@@ -166,8 +156,8 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    * Helper; generate file info for iterator.
    */
   protected function generateFileinfoArray() : \Traversable {
-    foreach ($this->prefilter($this->generateFileinfo()) as $key => $info) {
-      yield $key => static::mapSplfileinfoToArray($info);
+    foreach ($this->prefilter($this->generateFileinfo()) as $id => $info) {
+      yield $id => static::mapSplfileinfoToArray($info, $id);
     }
   }
 

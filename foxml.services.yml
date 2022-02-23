@@ -1,7 +1,7 @@
 ---
 services:
   foxml.substream.stream_wrapper:
-    class: Drupal\foxml\Utility\Substream
+    class: Drupal\foxml\StreamWrapper\Substream
     tags:
       - name: stream_wrapper
         scheme: foxml.substream
@@ -36,3 +36,16 @@ services:
     tags:
       - name: foxml.parser.object_lowlevel_storage
         priority: -10
+  foxml.lowlevel_storage.stream_wrapper:
+    class: Drupal\foxml\StreamWrapper\Foxml
+    arguments:
+      - '@foxml.parser.datastream_lowlevel_storage'
+      - '@foxml.parser.object_lowlevel_storage'
+      - '@file_system'
+    tags:
+      - name: stream_wrapper
+        scheme: foxml
+  foxml.path_processor:
+    class: Drupal\foxml\PathProcessor\PathProcessorFiles
+    tags:
+      - { name: path_processor_inbound, priority: 200 }

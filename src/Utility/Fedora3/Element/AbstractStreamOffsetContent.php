@@ -3,7 +3,7 @@
 namespace Drupal\foxml\Utility\Fedora3\Element;
 
 use Drupal\foxml\Utility\Fedora3\AbstractParser;
-use Drupal\foxml\Utility\Substream;
+use Drupal\foxml\StreamWrapper\Substream;
 
 /**
  * Abstract element handler for inline content.

@@ -62,14 +62,21 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
     }
 
     // Get an iterator of our iterator...
-    return new \RecursiveIteratorIterator($filter);
+    foreach ((new \RecursiveIteratorIterator($filter)) as $key => $value) {
+      yield $key => $this->relativize($value->getPathname());
+    }
+  }
+
+  protected function relativize($path) {
+    assert(strpos($path, $this->basePath) === 0, 'Is our path.');
+    return substr($path, 0, strlen($this->basePath) + 1);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getIteratorType() : int {
-    return ObjectLowLevelAdapterInterface::ITERATOR_SPLFILEINFO;
+    return ObjectLowLevelAdapterInterface::ITERATOR_PID;
   }
 
   /**
@@ -107,7 +114,13 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
    * {@inheritdoc}
    */
   public function dereference($id) : string {
-    throw new NotImplementedException('Would need some kind of templatey business to deal with however filenames were exported?');
+    $path = "{$this->basePath}/{$id}";
+
+    assert(file_exists($path), 'File exists.');
+    assert(!is_writable($path), 'File is writable.');
+    assert(!is_writable(dirname($path)), "File's directory is writable.");
+
+    return $path;
   }
 
   /**

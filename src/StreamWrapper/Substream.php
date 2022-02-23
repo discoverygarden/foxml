@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\foxml\Utility;
+namespace Drupal\foxml\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\ReadOnlyStream;
 use const iqb\stream\SUBSTREAM_SCHEME;
