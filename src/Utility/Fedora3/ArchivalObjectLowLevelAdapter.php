@@ -2,8 +2,6 @@
 
 namespace Drupal\foxml\Utility\Fedora3;
 
-use Drupal\foxml\Utility\Fedora3\Exceptions\NotImplementedException;
-
 use Drupal\Core\Site\Settings;
 
 /**
@@ -67,6 +65,9 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
     }
   }
 
+  /**
+   * Allow for _some_ kind of dereferencing.
+   */
   protected function relativize($path) {
     assert(strpos($path, $this->basePath) === 0, 'Is our path.');
     return substr($path, 0, strlen($this->basePath) + 1);

@@ -9,10 +9,30 @@ use Drupal\Core\File\FileSystem;
 use Drupal\Core\StreamWrapper\LocalReadOnlyStream;
 use Drupal\Core\Url;
 
+/**
+ * FOXML stream wrapper.
+ */
 class Foxml extends LocalReadOnlyStream {
 
+  /**
+   * The datastream low-level adapter manager service.
+   *
+   * @var \Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface
+   */
   protected DatastreamLowLevelAdapterInterface $datastreamAdapter;
+
+  /**
+   * The object low-level adapter manager service.
+   *
+   * @var \Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface
+   */
   protected ObjectLowLevelAdapterInterface $objectAdapter;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystem
+   */
   protected FileSystem $fileSystem;
 
   /**
@@ -22,9 +42,12 @@ class Foxml extends LocalReadOnlyStream {
    * do not know how to supply them.
    */
   public function __construct() {
+    // phpcs:disable DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
+    // XXX: DI is not possible in stream wrappers.
     $this->datastreamAdapter = \Drupal::service('foxml.parser.datastream_lowlevel_storage');
     $this->objectAdapter = \Drupal::service('foxml.parser.object_lowlevel_storage');
     $this->fileSystem = \Drupal::service('file_system');
+    // phpcs:enable
   }
 
   /**
@@ -76,7 +99,8 @@ class Foxml extends LocalReadOnlyStream {
    * {@inheritdoc}
    */
   public function getExternalUrl() {
-    // XXX: Copypasta from \Drupal\Core\StreamWrapper\PrivateStream::getExternalUrl().
+    // XXX: Copypasta from
+    // \Drupal\Core\StreamWrapper\PrivateStream::getExternalUrl().
     $path = str_replace('\\', '/', $this
       ->getTarget());
     return Url::fromRoute('foxml.download', [
