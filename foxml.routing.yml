@@ -6,6 +6,7 @@ foxml.download_actual:
     _controller: '\Drupal\system\FileDownloadController::download'
     scheme: foxml
   requirements:
+    # Access in handled inside the callback, via hook_file_download().
     _access: 'TRUE'
 foxml.download:
   # XXX: Adapted from `system.private_file_download`
@@ -15,4 +16,5 @@ foxml.download:
     scheme: foxml
   requirements:
     filepath: .+
+    # Access in handled inside the callback, via hook_file_download().
     _access: 'TRUE'
