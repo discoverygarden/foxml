@@ -84,11 +84,11 @@ class Foxml extends LocalReadOnlyStream {
     if (strpos($path, 'vfs://') === 0) {
       return $path;
     }
-    $realpath = realpath($path);
+    $realpath = $this->fileSystem->realpath($path);
     if (!$realpath) {
 
       // This file does not yet exist.
-      $realpath = realpath(dirname($path)) . '/' .
+      $realpath = $this->fileSystem->realpath(dirname($path)) . '/' .
         $this->fileSystem->basename($path);
     }
 
