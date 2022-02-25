@@ -40,10 +40,10 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
     //
     // Always get UNIX paths, skipping . and .., key as filename, and follow
     // links.
-    $flags = FilesystemIterator::UNIX_PATHS |
-             FilesystemIterator::SKIP_DOTS |
-             FilesystemIterator::KEY_AS_FILENAME |
-             FilesystemIterator::FOLLOW_SYMLINKS;
+    $flags = \FilesystemIterator::UNIX_PATHS |
+             \FilesystemIterator::SKIP_DOTS |
+             \FilesystemIterator::KEY_AS_FILENAME |
+             \FilesystemIterator::FOLLOW_SYMLINKS;
 
     // Recurse through the directory.
     $files = new \RecursiveDirectoryIterator($this->basePath, $flags);
@@ -70,7 +70,7 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
    */
   protected function relativize($path) {
     assert(strpos($path, $this->basePath) === 0, 'Is our path.');
-    return substr($path, 0, strlen($this->basePath) + 1);
+    return substr($path, strlen($this->basePath) + 1);
   }
 
   /**
@@ -117,9 +117,9 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
   public function dereference($id) : string {
     $path = "{$this->basePath}/{$id}";
 
-    assert(file_exists($path), 'File exists.');
-    assert(!is_writable($path), 'File is writable.');
-    assert(!is_writable(dirname($path)), "File's directory is writable.");
+    assert(file_exists($path), "File exists: $path");
+    assert(!is_writable($path), "File is writable: $path");
+    assert(!is_writable(dirname($path)), "File's directory is writable: $path");
 
     return $path;
   }
