@@ -59,6 +59,10 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
     $this->matchesInterface($adapter);
     $this->adapters[$priority][] = $adapter;
 
+    // Drop memoized values on addition of an adapter.
+    $this->sortedAdapters = NULL;
+    $this->validAdapters = NULL;
+
     return $this;
   }
 
