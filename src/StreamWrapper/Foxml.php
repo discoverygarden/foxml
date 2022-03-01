@@ -123,7 +123,7 @@ class Foxml extends LocalReadOnlyStream {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return 'FOXXML object/datastream storage dereferencing.';
+    return 'FOXML object/datastream storage dereferencing.';
   }
 
 }
