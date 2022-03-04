@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3\Element;
+namespace Drupal\foxml\Utility\Fedora3\Element;
 
-use Drupal\dgi_migrate\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\AbstractParser;
 
 /**
  * Element handler for foxml:datastreamVersion.
@@ -19,14 +19,14 @@ class DatastreamVersion extends AbstractParser {
   /**
    * An associative array mapping hash algorithms to ContentDigest instances.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\Element\ContentDigest[]
+   * @var \Drupal\foxml\Utility\Fedora3\Element\ContentDigest[]
    */
   protected $digests = [];
 
   /**
    * The content of the given datastream version.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\Element\ContentLocation|\Drupal\dgi_migrate\Utility\Fedora3\Element\AbstractStreamOffsetContent
+   * @var \Drupal\foxml\Utility\Fedora3\Element\ContentLocation|\Drupal\foxml\Utility\Fedora3\Element\AbstractStreamOffsetContent
    */
   protected $content = NULL;
 
@@ -66,7 +66,7 @@ class DatastreamVersion extends AbstractParser {
   /**
    * Content accessor.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\Element\ContentLocation|\Drupal\dgi_migrate\Utility\Fedora3\Element\AbstractStreamOffsetContent
+   * @return \Drupal\foxml\Utility\Fedora3\Element\ContentLocation|\Drupal\foxml\Utility\Fedora3\Element\AbstractStreamOffsetContent
    *   The underlying content element.
    */
   public function content() {

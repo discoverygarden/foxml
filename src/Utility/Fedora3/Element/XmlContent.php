@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3\Element;
+namespace Drupal\foxml\Utility\Fedora3\Element;
 
 /**
  * Element handler for foxml:xmlContent.

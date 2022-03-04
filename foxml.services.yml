@@ -1,0 +1,51 @@
+---
+services:
+  foxml.substream.stream_wrapper:
+    class: Drupal\foxml\StreamWrapper\Substream
+    tags:
+      - name: stream_wrapper
+        scheme: foxml.substream
+  foxml.parser:
+    class: Drupal\foxml\Utility\Fedora3\FoxmlParser
+    arguments:
+      - '@cache.foxml_parsed'
+      - '@foxml.parser.datastream_lowlevel_storage'
+  cache.foxml_parsed:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - name: cache.bin
+    factory: cache_factory:get
+    arguments:
+      - foxml_parsed
+  foxml.parser.object_lowlevel_storage:
+    class: Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterManager
+    tags:
+      - name: service_collector
+        tag: foxml.parser.object_lowlevel_storage
+        call: addAdapter
+  foxml.parser.datastream_lowlevel_storage:
+    class: Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterManager
+    tags:
+      - name: service_collector
+        tag: foxml.parser.datastream_lowlevel_storage
+        call: addAdapter
+  foxml.archival.object_lowlevel_storage:
+    class: Drupal\foxml\Utility\Fedora3\ArchivalObjectLowLevelAdapter
+    arguments:
+      - '@settings'
+    tags:
+      - name: foxml.parser.object_lowlevel_storage
+        priority: -10
+  foxml.lowlevel_storage.stream_wrapper:
+    class: Drupal\foxml\StreamWrapper\Foxml
+    arguments:
+      - '@foxml.parser.datastream_lowlevel_storage'
+      - '@foxml.parser.object_lowlevel_storage'
+      - '@file_system'
+    tags:
+      - name: stream_wrapper
+        scheme: foxml
+  foxml.path_processor:
+    class: Drupal\foxml\PathProcessor\PathProcessorFiles
+    tags:
+      - { name: path_processor_inbound, priority: 200 }

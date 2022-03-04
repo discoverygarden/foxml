@@ -3,7 +3,7 @@ name: Code Linting
 on:
   pull_request:
     branches:
-      - 2.x
+      - main
 
 jobs:
   Lint:

@@ -1,0 +1,5 @@
+---
+access referenced foxml:
+  title: "Access referenced/migrated FOXML files"
+  description: "Allow for for the referenced/migrated FOXML files from FOXML migrations to be viewed/downloaded."
+  restrict access: true

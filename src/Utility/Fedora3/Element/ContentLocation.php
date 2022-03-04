@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3\Element;
+namespace Drupal\foxml\Utility\Fedora3\Element;
 
-use Drupal\dgi_migrate\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\AbstractParser;
 
 /**
  * Element handler for foxml:contentLocation.
@@ -15,6 +15,32 @@ class ContentLocation extends AbstractParser {
   const TAG = 'foxml:contentLocation';
 
   /**
+   * The URI to the content.
+   *
+   * @var string
+   */
+  protected $uri = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function close() {
+    // XXX: Memoize the URI, as later closing will lose access to the parser.
+    $this->getUri();
+
+    parent::close();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    return array_merge(parent::__sleep(), [
+      'uri',
+    ]);
+  }
+
+  /**
    * Helper to fetch the URI.
    *
    * @return string
@@ -24,14 +50,19 @@ class ContentLocation extends AbstractParser {
    *   If the location refers to an internal URI.
    */
   public function getUri() {
-    if ($this->TYPE === 'URL') {
-      return $this->REF;
+    if ($this->uri === NULL) {
+      if ($this->TYPE === 'URL') {
+        $this->uri = $this->REF;
+      }
+      elseif ($this->TYPE === 'INTERNAL_ID') {
+        $this->uri = $this->getFoxmlParser()->getDatastreamLowLevelAdapter()->dereference($this->REF);
+      }
+      else {
+        throw new \Exception('Unhandled type.');
+      }
     }
-    else {
-      // XXX: An internal URI would require additional dereferencing to be
-      // useful.
-      throw new \Exception('Refusing to provide internal URI.');
-    }
+
+    return $this->uri;
   }
 
 }

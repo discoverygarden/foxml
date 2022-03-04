@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3;
+namespace Drupal\foxml\Utility\Fedora3;
 
-use Drupal\dgi_migrate\Utility\Fedora3\Element\DigitalObject;
+use Drupal\foxml\Utility\Fedora3\Element\DigitalObject;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -43,7 +43,7 @@ class FoxmlParser extends AbstractParser {
   /**
    * The parsed document.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\Element\DigitalObject
+   * @var \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
    */
   protected $output = NULL;
 
@@ -54,6 +54,20 @@ class FoxmlParser extends AbstractParser {
    */
   protected $cache;
 
+  /**
+   * Datastream storage service.
+   *
+   * @var \Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface
+   */
+  protected $datastreamStorage;
+
+  /**
+   * Flag if datastream storage service is valid.
+   *
+   * @var bool|null
+   */
+  protected $validDatastreamStorage = NULL;
+
   const MAP = [
     DigitalObject::TAG => DigitalObject::class,
   ];
@@ -61,8 +75,12 @@ class FoxmlParser extends AbstractParser {
   /**
    * Constructor.
    */
-  public function __construct(CacheBackendInterface $cache) {
+  public function __construct(
+    CacheBackendInterface $cache,
+    LowLevelAdapterInterface $datastream_storage
+  ) {
     $this->cache = $cache;
+    $this->datastreamStorage = $datastream_storage;
   }
 
   /**
@@ -112,12 +130,32 @@ class FoxmlParser extends AbstractParser {
   }
 
   /**
+   * Get the datastream low-level adapter.
+   *
+   * @return \Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface
+   *   The adapter, if configured.
+   *
+   * @throws \Exception
+   *   If there is no storage configured.
+   */
+  public function getDatastreamLowLevelAdapter() : DatastreamLowLevelAdapterInterface {
+    if (is_null($this->validDatastreamStorage)) {
+      $this->validDatastreamStorage = $this->datastreamStorage->valid();
+    }
+    if (!$this->validDatastreamStorage) {
+      throw new \Exception('Invalid low-level datastream storage adapter configuration.');
+    }
+
+    return $this->datastreamStorage;
+  }
+
+  /**
    * Get a parse of the target document.
    *
    * @param string $target
    *   A path/URL of a FOXML document to parse.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\Element\DigitalObject
+   * @return \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
    *   The parsed document.
    */
   public function parse($target) {
@@ -145,9 +183,7 @@ class FoxmlParser extends AbstractParser {
       while (!feof($this->file)) {
         $this->chunk = fread($this->file, static::READ_SIZE);
         $result = xml_parse($this->parser, $this->chunk, feof($this->file));
-        // Error code "0" means incomplete parse, so we just need to feed it
-        // some more.
-        if ($result && xml_get_error_code($this->parser) !== 0) {
+        if ($result === 0 || xml_get_error_code($this->parser) !== XML_ERROR_NONE) {
           throw new FoxmlParserException($this->parser);
         }
       }

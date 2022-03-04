@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\dgi_migrate\Utility\Fedora3\Element;
+namespace Drupal\foxml\Utility\Fedora3\Element;
 
-use Drupal\dgi_migrate\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\AbstractParser;
 
 /**
  * Element handler for foxml:digitalObject.
@@ -17,14 +17,14 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   /**
    * Object properties instance.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\Element\ObjectProperties
+   * @var \Drupal\foxml\Utility\Fedora3\Element\ObjectProperties
    */
   protected $properties = NULL;
 
   /**
    * Associative array mapping datastream IDs to the instances representing.
    *
-   * @var \Drupal\dgi_migrate\Utility\Fedora3\Element\Datastream[]
+   * @var \Drupal\foxml\Utility\Fedora3\Element\Datastream[]
    */
   protected $datastreams = [];
 
@@ -90,7 +90,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   /**
    * Accessors for the datastreams.
    *
-   * @return \Drupal\dgi_migrate\Utility\Fedora3\Element\Datastream[]
+   * @return \Drupal\foxml\Utility\Fedora3\Element\Datastream[]
    *   The associative array of datastream, keyed by datastream ID.
    */
   public function datastreams() {
@@ -153,7 +153,9 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   protected function xpath() {
     if (!isset($this->xpath)) {
       $this->dom = new \DOMDocument();
-      $this->dom->load($this['RELS-EXT']->getUri());
+      // XXX: An issue in the passing off of paths/URIs to libxml prevents the
+      // use of DOMDocument::load().
+      $this->dom->loadXML(file_get_contents($this['RELS-EXT']->getUri()));
       $this->xpath = new \DOMXPath($this->dom);
       $ns = [
         'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',

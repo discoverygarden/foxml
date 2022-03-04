@@ -1,0 +1,5 @@
+name: 'FOXML Utilities'
+description: "DGI Migration Support."
+type: module
+package: DGI
+core_version_requirement: ^8 || ^9
