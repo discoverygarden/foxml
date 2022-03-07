@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 class PidFilterAlterer implements CommandInfoAltererInterface {
 
   /**
-   * The annotation we use to handle user swapping.
+   * The annotation we use to handle filtering.
    */
   const ANNO = 'foxml-pid-filterer';
 
