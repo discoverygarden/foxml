@@ -1,0 +1,19 @@
+---
+services:
+  logger.channel.foxml_drush:
+    parent: logger.channel_base
+    arguments: ['foxml.drush']
+  foxml.command.pid_filter:
+    class: \Drupal\foxml\Commands\PidFilter
+    tags:
+      - name: drush.command
+    arguments:
+      - '@logger.channel.foxml_drush'
+      - false
+  foxml.command.pid_filter_alterer:
+    class: \Drupal\foxml\Commands\PidFilterAlterer
+    tags:
+      - name: drush.command_filter_alterer
+    arguments:
+      - '@logger.channel.foxml_drush'
+      - false
