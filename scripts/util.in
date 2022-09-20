@@ -1,0 +1,89 @@
+#!/bin/bash
+
+FEDORA_URL=http://localhost
+FEDORA_USER=fedoraAdmin
+SKIP_AUTH=false
+DSID=MODS
+
+print_help() {
+  cat <<-HELP
+This script is used to generate statistics or pull data from a FCREPO 3 instance for migration data analysis.
+The following arguments are provided:
+  --fedora_url [FCREPO3 URL] - Default ($FEDORA_URL)
+  --fedora_user [FCREPO3 User] - Default ($FEDORA_USER)
+  --fedora_pass [FCREPO3 Password] - REQUIRED
+  --skip_auth_check [Skips verification of credentials on a request] - Default (false)
+  --dsid [Metadata datastream ID to be used for metadata export] - Default ($DSID)
+HELP
+exit 0
+}
+
+
+# Helper to perform RI searches.
+do_curl() {
+curl --location --request POST "${FEDORA_URL}:8080/fedora/risearch" \
+-u "${FEDORA_USER}:${FEDORA_PASS}" \
+-s \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode "type=tuples" \
+--data-urlencode 'lang=sparql' \
+--data-urlencode "format=$2" \
+--data-urlencode 'limit=' \
+--data-urlencode 'dt=on' \
+--data-urlencode "query=$1"
+}
+
+# Helper to ensure can authenticate to Fedora.
+check_auth() {
+CODE=$(curl --location "${FEDORA_URL}:8080/fedora/objects/fedora-system:ContentModel-3.0/export" \
+-u "${FEDORA_USER}:${FEDORA_PASS}" \
+-s \
+-w '%{http_code}' \
+-o /dev/null \
+)
+echo "${CODE}"
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --fedora_url=*)
+      FEDORA_URL="${1#*=}"
+      ;;
+    --fedora_user=*)
+      FEDORA_USER="${1#*=}"
+      ;;
+    --fedora_pass=*)
+      FEDORA_PASS="${1#*=}"
+      ;;
+    --skip_auth_check)
+      SKIP_AUTH=true
+      ;;
+    --dsid=*)
+      DSID="${1#*=}"
+      ;;
+    --help) print_help;;
+    *)
+      printf "************************************************************\n"
+      printf "* Error: Invalid argument, run --help for valid arguments. *\n"
+      printf "************************************************************\n"
+      exit 1
+  esac
+  shift
+done
+
+if [ -z "${FEDORA_PASS}" ]; then
+  printf "*****************************************************\n"
+  printf "* Error: A password for the Fedora user is required *\n"
+  printf "*****************************************************\n"
+  exit 1
+fi;
+
+if [ "${SKIP_AUTH}" = false ]; then
+  AUTH_CODE=$(check_auth)
+  if [ "${AUTH_CODE}" != 200 ]; then
+    printf "************************************************************\n"
+    printf "* Error: Authentication failed to Fedora.                  *\n"
+    printf "************************************************************\n"
+    exit 1
+  fi
+fi
