@@ -14,7 +14,7 @@ class BinaryContent extends AbstractStreamOffsetContent {
   /**
    * {@inheritdoc}
    */
-  public function getUri() {
+  public function getUri() : string {
     $uri = parent::getUri();
     return "php://filter/read=convert.base64-decode/resource={$uri}";
   }

@@ -18,7 +18,7 @@ trait EmptyTrait {
    * @throws \Exception
    *   Got characters when not expecting any.
    */
-  public function characters($parser, $characters) {
+  public function characters($parser, $characters) : void {
     if (strlen($characters) > 0) {
       throw new \Exception('Node expected to be empty contained characters.');
     }

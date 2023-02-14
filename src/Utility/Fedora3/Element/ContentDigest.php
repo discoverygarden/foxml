@@ -20,7 +20,7 @@ class ContentDigest extends AbstractParser {
    * @return string
    *   The hash algorithm represented by the digest.
    */
-  public function id() {
+  public function id() : string {
     return $this->TYPE;
   }
 
@@ -30,7 +30,7 @@ class ContentDigest extends AbstractParser {
    * @return string
    *   The stored hash/digest.
    */
-  public function value() {
+  public function value() : string {
     return $this->DIGEST;
   }
 

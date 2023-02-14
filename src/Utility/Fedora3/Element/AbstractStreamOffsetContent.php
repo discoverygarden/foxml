@@ -15,21 +15,21 @@ abstract class AbstractStreamOffsetContent extends AbstractParser {
    *
    * @var int
    */
-  protected $start;
+  protected int $start;
 
   /**
    * The byte offset of the end of the inline content in the target document.
    *
    * @var int
    */
-  protected $end;
+  protected int $end;
 
   /**
    * The URI/path of the target document.
    *
    * @var string
    */
-  protected $target;
+  protected string $target;
 
   /**
    * Constructor.
@@ -45,7 +45,7 @@ abstract class AbstractStreamOffsetContent extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep() : array {
     return array_merge(parent::__sleep(), [
       'start',
       'end',
@@ -59,7 +59,7 @@ abstract class AbstractStreamOffsetContent extends AbstractParser {
    * @return int
    *   The starting offset.
    */
-  public function start() {
+  public function start() : int {
     return $this->start;
   }
 
@@ -69,7 +69,7 @@ abstract class AbstractStreamOffsetContent extends AbstractParser {
    * @return int
    *   The ending offset.
    */
-  public function end() {
+  public function end() : int {
     return $this->end;
   }
 
@@ -79,35 +79,35 @@ abstract class AbstractStreamOffsetContent extends AbstractParser {
    * @return int
    *   The length of the described substream.
    */
-  public function length() {
+  public function length() : int {
     return $this->end - $this->start;
   }
 
   /**
    * Helper; update the ending offset.
    */
-  protected function updateEnd() {
+  protected function updateEnd() : void {
     $this->end = $this->getFoxmlParser()->getOffset();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function tagOpen($parser, $tag, array $attributes) {
+  public function tagOpen($parser, $tag, array $attributes) : void {
     $this->updateEnd();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function tagClose($parser, $tag) {
+  public function tagClose($parser, $tag) : void {
     $this->updateEnd();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function characters($parser, $chars) {
+  public function characters($parser, $chars) : void {
     $offset = $this->getFoxmlParser()->getOffset();
     if ($offset === $this->end) {
       // XXX: If we encounter a chunk of XML which _only_ contains characters,
@@ -123,7 +123,7 @@ abstract class AbstractStreamOffsetContent extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  public function getUri() {
+  public function getUri() : string {
     return Substream::format($this->target, $this->start(), $this->length());
   }
 

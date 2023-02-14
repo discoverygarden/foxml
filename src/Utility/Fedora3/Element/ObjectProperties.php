@@ -3,6 +3,7 @@
 namespace Drupal\foxml\Utility\Fedora3\Element;
 
 use Drupal\foxml\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\ParserInterface;
 
 /**
  * Element handler for foxml:objectProperties.
@@ -19,12 +20,12 @@ class ObjectProperties extends AbstractParser implements \ArrayAccess {
    *
    * @var \Drupal\foxml\Utility\Fedora3\Element\ObjectProperty[]
    */
-  protected $properties = [];
+  protected array $properties = [];
 
   /**
    * {@inheritdoc}
    */
-  protected function pop() {
+  protected function pop() : ParserInterface {
     $old = parent::pop();
 
     $this[$old->id()] = $old;
@@ -35,7 +36,7 @@ class ObjectProperties extends AbstractParser implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep() : array {
     return array_merge(parent::__sleep(), [
       'properties',
     ]);
@@ -44,21 +45,21 @@ class ObjectProperties extends AbstractParser implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset) {
+  public function offsetExists($offset) : bool {
     return isset($this->properties[$offset]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset) {
+  public function offsetGet($offset) : ObjectProperty {
     return $this->properties[$offset];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value) {
+  public function offsetSet($offset, $value) : void {
     if (!isset($this[$offset])) {
       $this->properties[$offset] = $value;
     }
@@ -70,7 +71,7 @@ class ObjectProperties extends AbstractParser implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset) {
+  public function offsetUnset($offset) : void {
     throw new \Exception('Not implemented.');
   }
 

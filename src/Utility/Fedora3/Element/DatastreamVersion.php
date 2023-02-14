@@ -3,6 +3,7 @@
 namespace Drupal\foxml\Utility\Fedora3\Element;
 
 use Drupal\foxml\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\ParserInterface;
 
 /**
  * Element handler for foxml:datastreamVersion.
@@ -21,7 +22,7 @@ class DatastreamVersion extends AbstractParser {
    *
    * @var \Drupal\foxml\Utility\Fedora3\Element\ContentDigest[]
    */
-  protected $digests = [];
+  protected array $digests = [];
 
   /**
    * The content of the given datastream version.
@@ -33,7 +34,7 @@ class DatastreamVersion extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep() : array {
     return array_merge(parent::__sleep(), [
       'digests',
       'content',
@@ -43,7 +44,7 @@ class DatastreamVersion extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  public function close() {
+  public function close() : void {
     parent::close();
 
     if (!empty($this->digests) && $this->content instanceof BinaryContent) {
@@ -59,7 +60,7 @@ class DatastreamVersion extends AbstractParser {
    * @return string
    *   The ID of this datastream version.
    */
-  public function id() {
+  public function id() : string {
     return $this->ID;
   }
 
@@ -76,7 +77,7 @@ class DatastreamVersion extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  public function pop() {
+  public function pop() : ParserInterface {
     $old = parent::pop();
 
     if ($old instanceof ContentDigest) {
@@ -103,7 +104,7 @@ class DatastreamVersion extends AbstractParser {
    * @return string
    *   The URI.
    */
-  public function getUri() {
+  public function getUri() : string {
     return $this->content->getUri();
   }
 

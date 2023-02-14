@@ -13,35 +13,35 @@ abstract class AbstractParser implements ParserInterface {
    *
    * @var string[]
    */
-  protected $map = NULL;
+  protected ?array $map = NULL;
 
   /**
    * The parser instance parsing.
    *
-   * @var \Drupal\foxml\Utility\FoxmlParser
+   * @var \Drupal\foxml\Utility\FoxmlParser|null
    */
-  protected $foxmlParser;
+  protected ?FoxmlParser $foxmlParser;
 
   /**
    * Parser state for this element; the depths of each tag.
    *
    * @var int[]
    */
-  protected $depths = [];
+  protected array $depths = [];
 
   /**
    * Parser state for this element; the stack of elements.
    *
    * @var \Drupal\foxml\Utility\Fedora3\ParserInterface[]
    */
-  protected $stack = [];
+  protected array $stack = [];
 
   /**
    * Associative array of attributes on this element.
    *
    * @var string[]
    */
-  protected $attributes;
+  protected array $attributes;
 
   /**
    * Get the current element being processed.
@@ -49,7 +49,7 @@ abstract class AbstractParser implements ParserInterface {
    * @return \Drupal\foxml\Utility\Fedora3\ParserInterface
    *   The current element being processed.
    */
-  protected function current() {
+  protected function current() : ParserInterface {
     return end($this->stack);
   }
 
@@ -59,7 +59,7 @@ abstract class AbstractParser implements ParserInterface {
    * @param \Drupal\foxml\Utility\Fedora3\ParserInterface $new
    *   The new element.
    */
-  protected function push(ParserInterface $new) {
+  protected function push(ParserInterface $new) : void {
     $this->stack[] = $new;
   }
 
@@ -69,7 +69,7 @@ abstract class AbstractParser implements ParserInterface {
    * @return \Drupal\foxml\Utility\Fedora3\ParserInterface
    *   A fully parsed element.
    */
-  protected function pop() {
+  protected function pop() : ParserInterface {
     $old = array_pop($this->stack);
     $old->close();
     return $old;
@@ -78,7 +78,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Constructor.
    *
-   * @param \Drupal\foxml\Utility\FoxmlParser $foxml_parser
+   * @param \Drupal\foxml\Utility\Fedora3\FoxmlParser $foxml_parser
    *   The root parser parsing.
    * @param string[] $attributes
    *   The attributes for the given element.
@@ -98,11 +98,11 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * Get the root parser.
    *
-   * @return \Drupal\foxml\Utility\FoxmlParser
+   * @return \Drupal\foxml\Utility\Fedora3\FoxmlParser
    *   The root parser... essentially so XmlContent and BinaryContent can
    *   determine their offsets.
    */
-  protected function getFoxmlParser() {
+  protected function getFoxmlParser() : ParserInterface {
     return $this->foxmlParser;
   }
 
@@ -122,7 +122,7 @@ abstract class AbstractParser implements ParserInterface {
    * @return bool
    *   TRUE if it exists; otherwise, FALSE.
    */
-  public function __isset($offset) {
+  public function __isset($offset) : bool {
     return isset($this->attributes[$offset]);
   }
 
@@ -140,7 +140,7 @@ abstract class AbstractParser implements ParserInterface {
    * @return string[]
    *   The object members to be serialized.
    */
-  public function __sleep() {
+  public function __sleep() : array {
     return ['attributes'];
   }
 
@@ -161,7 +161,7 @@ abstract class AbstractParser implements ParserInterface {
    *   An associative array mapping the tag names provided by the parser to the
    *   names of the classes which should handle them.
    */
-  protected function map() {
+  protected function map() : array {
     if ($this->map === NULL) {
       $this->map = array_combine(
         array_map(function ($key) {
@@ -180,7 +180,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * {@inheritdoc}
    */
-  public function tagOpen($parser, $tag, array $attributes) {
+  public function tagOpen($parser, $tag, array $attributes) : void {
     if (isset($this->map()[$tag])) {
       if (!isset($this->depths[$tag])) {
         $this->depths[$tag] = 1;
@@ -190,6 +190,7 @@ abstract class AbstractParser implements ParserInterface {
       }
       if ($this->depths[$tag] === 1) {
         $class = $this->map()[$tag];
+        assert(is_a($class, ParserInterface::class, TRUE), 'Class is a parser.');
         $this->push(new $class($this->getFoxmlParser(), $attributes));
       }
       else {
@@ -197,6 +198,7 @@ abstract class AbstractParser implements ParserInterface {
       }
     }
     else {
+      assert($this->current(), 'Deferred parsing to existing element.');
       $this->current()->tagOpen($parser, $tag, $attributes);
     }
   }
@@ -204,7 +206,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * {@inheritdoc}
    */
-  public function tagClose($parser, $tag) {
+  public function tagClose($parser, $tag) : void {
     if (isset($this->map()[$tag])) {
       $this->depths[$tag]--;
       if ($this->depths[$tag] === 0) {
@@ -212,6 +214,7 @@ abstract class AbstractParser implements ParserInterface {
         unset($this->depths[$tag]);
       }
       else {
+        assert($this->current())
         $this->current()->tagClose($parser, $tag);
       }
     }
@@ -223,7 +226,7 @@ abstract class AbstractParser implements ParserInterface {
   /**
    * {@inheritdoc}
    */
-  public function characters($parser, $chars) {
+  public function characters($parser, $chars) : void {
     if ($this->current()) {
       $this->current()->characters($parser, $chars);
     }

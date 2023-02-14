@@ -3,6 +3,7 @@
 namespace Drupal\foxml\Utility\Fedora3\Element;
 
 use Drupal\foxml\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\ParserInterface;
 
 /**
  * Element handler for foxml:digitalObject.
@@ -17,21 +18,21 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   /**
    * Object properties instance.
    *
-   * @var \Drupal\foxml\Utility\Fedora3\Element\ObjectProperties
+   * @var \Drupal\foxml\Utility\Fedora3\Element\ObjectProperties|null
    */
-  protected $properties = NULL;
+  protected ?ObjectProperties $properties = NULL;
 
   /**
    * Associative array mapping datastream IDs to the instances representing.
    *
    * @var \Drupal\foxml\Utility\Fedora3\Element\Datastream[]
    */
-  protected $datastreams = [];
+  protected array $datastreams = [];
 
   /**
    * {@inheritdoc}
    */
-  protected function pop() {
+  protected function pop() : ParserInterface {
     $old = parent::pop();
 
     if ($old instanceof ObjectProperties) {
@@ -58,7 +59,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    * @return bool
    *   TRUE if it is present; otherwise, FALSE.
    */
-  public function __isset($prop) {
+  public function __isset($prop) : bool {
     return isset($this->properties[$prop]) || parent::__isset($prop);
   }
 
@@ -80,7 +81,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep() : array {
     return array_merge(parent::__sleep(), [
       'properties',
       'datastreams',
@@ -93,28 +94,28 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    * @return \Drupal\foxml\Utility\Fedora3\Element\Datastream[]
    *   The associative array of datastream, keyed by datastream ID.
    */
-  public function datastreams() {
+  public function datastreams() : array {
     return $this->datastreams;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset) {
+  public function offsetExists($offset) : bool {
     return isset($this->datastreams[$offset]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset) {
+  public function offsetGet($offset) : Datastream {
     return $this->datastreams[$offset];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value) {
+  public function offsetSet($offset, $value) : void {
     if (!isset($this[$offset])) {
       $this->datastreams[$offset] = $value;
     }
@@ -126,7 +127,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset) {
+  public function offsetUnset($offset) : void {
     throw new \Exception('Not implemented.');
   }
 
@@ -135,14 +136,14 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    *
    * @var \DOMDocument
    */
-  protected $dom;
+  protected \DOMDocument $dom;
 
   /**
    * DOMXPath instance for RELS-EXT, lazily-instantiated.
    *
    * @var \DOMXPath
    */
-  protected $xpath;
+  protected \DOMXPath $xpath;
 
   /**
    * Get a DOMXPath instance for the RELS-EXT.
@@ -150,7 +151,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    * @return \DOMXPath
    *   A DOMXPath instance with the RELS-EXT loaded and queryable.
    */
-  protected function xpath() {
+  protected function xpath() : \DOMXPath {
     if (!isset($this->xpath)) {
       $this->dom = new \DOMDocument();
       // XXX: An issue in the passing off of paths/URIs to libxml prevents the
@@ -179,7 +180,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    * @return string[]
    *   The results of the query.
    */
-  protected function relsExtResourceQuery($query) {
+  protected function relsExtResourceQuery(string $query) : array {
     $results = [];
 
     foreach ($this->xpath()->query($query) as $node) {
@@ -195,7 +196,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    * @return string[]
    *   The content model PIDs of the given object.
    */
-  public function models() {
+  public function models() : array {
     return $this->relsExtResourceQuery('/rdf:RDF/rdf:Description/fm:hasModel/@rdf:resource');
   }
 
@@ -212,7 +213,7 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
   public function parents(array $predicates = [
     'isMemberOf',
     'isMemberOfCollection',
-  ]) {
+  ]) : array {
     assert(count($predicates) > 0, 'Has at least one predicate for which to look.');
     $map = function ($pred) {
       return "self::fre:$pred";

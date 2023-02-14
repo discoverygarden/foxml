@@ -20,7 +20,7 @@ class ObjectProperty extends AbstractParser {
    * @return string
    *   The name of the property.
    */
-  public function id() {
+  public function id() : string {
     $parts = explode('#', $this->attributes['NAME']);
     return $parts[1];
   }
@@ -31,7 +31,7 @@ class ObjectProperty extends AbstractParser {
    * @return string
    *   The value of the property.
    */
-  public function value() {
+  public function value() : string {
     return $this->attributes['VALUE'];
   }
 

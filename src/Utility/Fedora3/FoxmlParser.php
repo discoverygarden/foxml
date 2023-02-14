@@ -24,7 +24,7 @@ class FoxmlParser extends AbstractParser {
    *
    * @var string
    */
-  protected $target;
+  protected string $target;
 
   /**
    * File pointer of the file being parsed.
@@ -36,37 +36,37 @@ class FoxmlParser extends AbstractParser {
   /**
    * A chunk of the input to feed to the parser.
    *
-   * @var string
+   * @var string|null
    */
-  protected $chunk = NULL;
+  protected ?string $chunk = NULL;
 
   /**
    * The parsed document.
    *
-   * @var \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
+   * @var \Drupal\foxml\Utility\Fedora3\Element\DigitalObject|null
    */
-  protected $output = NULL;
+  protected ?DigitalObject $output = NULL;
 
   /**
    * A cache to use for parse results.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $cache;
+  protected CacheBackendInterface $cache;
 
   /**
    * Datastream storage service.
    *
    * @var \Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface
    */
-  protected $datastreamStorage;
+  protected DatastreamLowLevelAdapterInterface $datastreamStorage;
 
   /**
    * Flag if datastream storage service is valid.
    *
    * @var bool|null
    */
-  protected $validDatastreamStorage = NULL;
+  protected ?bool $validDatastreamStorage = NULL;
 
   const MAP = [
     DigitalObject::TAG => DigitalObject::class,
@@ -86,14 +86,14 @@ class FoxmlParser extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  protected function getFoxmlParser() {
+  protected function getFoxmlParser() : self {
     return $this;
   }
 
   /**
    * Setup the parser.
    */
-  protected function initParser() {
+  protected function initParser() : void {
     $this->parser = xml_parser_create_ns();
     xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, FALSE);
     xml_parser_set_option($this->parser, XML_OPTION_SKIP_WHITE, TRUE);
@@ -105,7 +105,7 @@ class FoxmlParser extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  public function close() {
+  public function close() : void {
     if ($this->file) {
       fclose($this->file);
     }
@@ -120,7 +120,7 @@ class FoxmlParser extends AbstractParser {
   /**
    * Teardown the parser.
    */
-  protected function destroyParser() {
+  protected function destroyParser() : void {
     if ($this->parser) {
       if (!xml_parser_free($this->parser)) {
         throw new \Exception('Failed to free parser.');
@@ -158,7 +158,7 @@ class FoxmlParser extends AbstractParser {
    * @return \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
    *   The parsed document.
    */
-  public function parse($target) {
+  public function parse($target) : DigitalObject {
     $item = $this->cache->get($target);
     if ($item && $item->data) {
       // XXX: Renew the cache.
@@ -211,7 +211,7 @@ class FoxmlParser extends AbstractParser {
    * @return string
    *   The target file path/URI.
    */
-  public function getTarget() {
+  public function getTarget() : string {
     return $this->target;
   }
 
@@ -221,7 +221,7 @@ class FoxmlParser extends AbstractParser {
    * @return int
    *   The current byte offset.
    */
-  public function getOffset() {
+  public function getOffset() : int {
     // XXX: Apparently, there may be differences in what
     // xml_get_current_byte_index() returns, based on what parser is used
     // (libxml2 vs expat); for example, "start element" having placed the offset
@@ -264,7 +264,7 @@ class FoxmlParser extends AbstractParser {
    * @return int
    *   The corrected offset.
    */
-  protected static function correctOffset($index, $pos) {
+  protected static function correctOffset(int $index, int $pos) : int {
     $slot = intdiv($pos, 2 ** 31);
 
     $val = $index +
@@ -277,8 +277,10 @@ class FoxmlParser extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  protected function pop() {
-    $this->output = parent::pop();
+  protected function pop() : ParserInterface {
+    $output = parent::pop();
+    assert(is_a($output, DigitalObject::class), 'Successful parse.');
+    $this->output = $output;
     return $this->output;
   }
 

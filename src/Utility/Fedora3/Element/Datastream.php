@@ -3,6 +3,7 @@
 namespace Drupal\foxml\Utility\Fedora3\Element;
 
 use Drupal\foxml\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\ParserInterface;
 
 /**
  * Element handler for foxml:datastream.
@@ -18,12 +19,12 @@ class Datastream extends AbstractParser implements \ArrayAccess {
    *
    * @var \Drupal\foxml\Utility\Fedora3\Element\DatastreamVersion[]
    */
-  protected $versions = [];
+  protected array $versions = [];
 
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep() : array {
     return array_merge(parent::__sleep(), [
       'versions',
     ]);
@@ -32,7 +33,7 @@ class Datastream extends AbstractParser implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  protected function pop() {
+  protected function pop() : ParserInterface {
     $old = parent::pop();
 
     $this[$old->id()] = $old;
@@ -46,7 +47,7 @@ class Datastream extends AbstractParser implements \ArrayAccess {
    * @return string
    *   The ID of this datastream.
    */
-  public function id() {
+  public function id() : string {
     return $this->ID;
   }
 
@@ -56,28 +57,28 @@ class Datastream extends AbstractParser implements \ArrayAccess {
    * @return \Drupal\foxml\Utility\Fedora3\Element\DatastreamVersion
    *   The latest datastream version.
    */
-  public function latest() {
+  public function latest() : DatastreamVersion {
     return end($this->versions);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset) {
+  public function offsetExists($offset) : bool {
     return isset($this->versions[$offset]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset) {
+  public function offsetGet($offset) : DatastreamVersion {
     return $this->versions[$offset];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value) {
+  public function offsetSet($offset, $value) : void {
     if (!isset($this[$offset])) {
       $this->versions[$offset] = $value;
     }
@@ -89,7 +90,7 @@ class Datastream extends AbstractParser implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset) {
+  public function offsetUnset($offset) : void {
     throw new Exception('Not implemented.');
   }
 
@@ -99,7 +100,7 @@ class Datastream extends AbstractParser implements \ArrayAccess {
    * @return string
    *   The URI of the latest datastream version.
    */
-  public function getUri() {
+  public function getUri() : string {
     return $this->latest()->content()->getUri();
   }
 

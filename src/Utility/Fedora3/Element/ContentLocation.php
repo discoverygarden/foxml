@@ -17,14 +17,14 @@ class ContentLocation extends AbstractParser {
   /**
    * The URI to the content.
    *
-   * @var string
+   * @var string|null
    */
-  protected $uri = NULL;
+  protected ?string $uri = NULL;
 
   /**
    * {@inheritdoc}
    */
-  public function close() {
+  public function close() : void {
     // XXX: Memoize the URI, as later closing will lose access to the parser.
     $this->getUri();
 
@@ -34,7 +34,7 @@ class ContentLocation extends AbstractParser {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep() : array {
     return array_merge(parent::__sleep(), [
       'uri',
     ]);
@@ -49,7 +49,7 @@ class ContentLocation extends AbstractParser {
    * @throws \Exception
    *   If the location refers to an internal URI.
    */
-  public function getUri() {
+  public function getUri() : string {
     if ($this->uri === NULL) {
       if ($this->TYPE === 'URL') {
         $this->uri = $this->REF;

@@ -15,21 +15,21 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
    *
    * @var array
    */
-  protected $adapters = [];
+  protected array $adapters = [];
 
   /**
    * Sorted array of adapters, or NULL.
    *
    * @var \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]|null
    */
-  protected $sortedAdapters = NULL;
+  protected ?array $sortedAdapters = NULL;
 
   /**
    * Sorted array of valid adapters, or NULL.
    *
    * @var \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface[]|null
    */
-  protected $validAdapters = NULL;
+  protected ?array $validAdapters = NULL;
 
   /**
    * Hacky "generics" approach.
@@ -52,10 +52,10 @@ abstract class AbstractLowLevelAdapterManager implements LowLevelAdapterInterfac
    * @param int $priority
    *   The priority of the adapter.
    *
-   * @return AbstractLowLevelAdapterManager
+   * @return $this
    *   The current object.
    */
-  public function addAdapter(LowLevelAdapterInterface $adapter, $priority = 0) {
+  public function addAdapter(LowLevelAdapterInterface $adapter, int $priority = 0) : AbstractLowLevelAdapterManager {
     $this->matchesInterface($adapter);
     $this->adapters[$priority][] = $adapter;
 
