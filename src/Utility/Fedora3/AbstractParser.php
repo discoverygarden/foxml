@@ -214,11 +214,12 @@ abstract class AbstractParser implements ParserInterface {
         unset($this->depths[$tag]);
       }
       else {
-        assert($this->current())
+        assert($this->current(), 'Closing has element.');
         $this->current()->tagClose($parser, $tag);
       }
     }
     else {
+      assert($this->current(), 'Deferred closing has element.');
       $this->current()->tagClose($parser, $tag);
     }
   }
