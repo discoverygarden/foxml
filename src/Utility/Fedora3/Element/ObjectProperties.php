@@ -12,6 +12,7 @@ class ObjectProperties extends AbstractParser implements \ArrayAccess {
   const TAG = 'foxml:objectProperties';
   const MAP = [
     ObjectProperty::TAG => ObjectProperty::class,
+    ExtObjectProperty::TAG => ExtObjectProperty::class,
   ];
 
   /**
