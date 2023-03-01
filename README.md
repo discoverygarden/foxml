@@ -1,8 +1,22 @@
 # FOXML Utilities
 
+![](https://github.com/discoverygarden/foxml/actions/workflows/auto_lint.yml/badge.svg)
+![](https://github.com/discoverygarden/foxml/actions/workflows/auto-semver.yml/badge.svg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 ## Introduction
 
 Provides migration plugins and utility scripts to facilitate I7 to I8 migration.
+
+## Table of Contents
+
+* [Features](#features)
+* [Installation](#installation)
+* [Configuration](#configuration)
+* [Troubleshooting/Issues](#troubleshootingissues)
+* [Maintainers and Sponsors](#maintainers--sponsors)
+* [Development/Contribution](#development--contribution)
+* [License](#license)
 
 ## Features
 
@@ -54,17 +68,17 @@ Having problems or solved a problem? Contact
   * hesitant to remove the assertions without having any other mechanism to
   * could instead roll some unit tests?
 
-## Maintainers/Sponsors
-
-Sponsored by:
-
-* [FLVC](@todo Add link)
+## Maintainers / Sponsors
 
 Current maintainers:
 
 * [discoverygarden](http://www.discoverygarden.ca)
 
-## Development
+Sponsors:
+
+* [FLVC](@todo Add link)
+
+## Development / Contribution
 
 If you would like to contribute to this module create an issue, pull request
 and or contact

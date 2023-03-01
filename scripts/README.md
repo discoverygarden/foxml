@@ -1,5 +1,14 @@
 # FCREPO3 Analysis Helpers
 
+## Introduction
+Scripts to analyse and export metadata from an FCREPO3 instance. Refer to the [README](https://github.com/discoverygarden/foxml/blob/main/scripts/README.md) for more details.
+
+## Table of Contents
+
+* [Setup](#setup)
+* [Features](#features)
+* [Usage](#usage)
+
 ## Setup
 
 These scripts require an FCREPO3 instance to be run over. In the event, these scripts are run on a separate system from where
