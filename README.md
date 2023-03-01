@@ -14,8 +14,8 @@ Provides migration plugins and utility scripts to facilitate I7 to I8 migration.
 * [Installation](#installation)
 * [Configuration](#configuration)
 * [Troubleshooting/Issues](#troubleshootingissues)
-* [Maintainers and Sponsors](#maintainers--sponsors)
-* [Development/Contribution](#development--contribution)
+* [Maintainers and Sponsors](#maintainers-and-sponsors)
+* [Development/Contribution](#developmentcontribution)
 * [License](#license)
 
 ## Features
@@ -68,7 +68,7 @@ Having problems or solved a problem? Contact
   * hesitant to remove the assertions without having any other mechanism to
   * could instead roll some unit tests?
 
-## Maintainers / Sponsors
+## Maintainers and Sponsors
 
 Current maintainers:
 
@@ -78,7 +78,7 @@ Sponsors:
 
 * [FLVC](@todo Add link)
 
-## Development / Contribution
+## Development/Contribution
 
 If you would like to contribute to this module create an issue, pull request
 and or contact
