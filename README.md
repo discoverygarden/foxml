@@ -82,7 +82,7 @@ Sponsors:
 
 If you would like to contribute to this module, please check out github's helpful
 [Documentation for Developers](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to create an issue or pull request and/or
-contact [discoverygarden](http://www.discoverygarden.ca).
+contact [discoverygarden](http://support.discoverygarden.ca).
 
 ## License
 
