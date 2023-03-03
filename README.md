@@ -6,7 +6,7 @@
 
 ## Introduction
 
-Provides migration plugins and utility scripts to facilitate I7 to I8 migration.
+Provides migration plugins and utility scripts to facilitate I7 to Modern Islandora migration.
 
 ## Table of Contents
 
@@ -80,9 +80,9 @@ Sponsors:
 
 ## Development/Contribution
 
-If you would like to contribute to this module create an issue, pull request
-and or contact
-[discoverygarden](http://support.discoverygarden.ca).
+If you would like to contribute to this module, please check out github's helpful
+[Documentation for Developers](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) to create an issue or pull request and/or
+contact [discoverygarden](http://www.discoverygarden.ca).
 
 ## License
 
