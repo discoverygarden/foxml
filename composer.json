@@ -1,7 +1,7 @@
 {
     "name": "discoverygarden/foxml",
     "type": "drupal-module",
-    "license": "GPL-3.0-only",
+    "license": "GPL-3.0-or-later",
     "require": {
       "iqb/substream": "dev-master"
     }
