@@ -30,12 +30,20 @@ class Parse extends ProcessPluginBase implements ContainerFactoryPluginInterface
   protected $parser;
 
   /**
+   * Control concurrency.
+   *
+   * @var bool
+   */
+  protected bool $controlConcurrency = FALSE;
+
+  /**
    * Constructor.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, FoxmlParser $parser) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->parser = $parser;
+    $this->controlConcurrency = $this->configuration['control_concurrency'] ?? FALSE;
   }
 
   /**
@@ -57,7 +65,7 @@ class Parse extends ProcessPluginBase implements ContainerFactoryPluginInterface
     if (!is_string($value) || !file_exists($value)) {
       throw new MigrateException('The passed value is not a file path.');
     }
-    $parsed = $this->parser->parse($value);
+    $parsed = $this->parser->parse($value, $this->controlConcurrency);
     assert($parsed instanceof DigitalObject, "Parser parsed under $destination_property");
     return $parsed;
   }

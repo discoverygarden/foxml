@@ -2,6 +2,8 @@
 
 namespace Drupal\foxml\Utility\Fedora3;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\foxml\Utility\Fedora3\Element\DigitalObject;
 use Drupal\Core\Cache\CacheBackendInterface;
 
@@ -68,19 +70,37 @@ class FoxmlParser extends AbstractParser {
    */
   protected $validDatastreamStorage = NULL;
 
+  /**
+   * Semaphore/lock service.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected LockBackendInterface $lock;
+
   const MAP = [
     DigitalObject::TAG => DigitalObject::class,
   ];
+
+  /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected Connection $database;
 
   /**
    * Constructor.
    */
   public function __construct(
     CacheBackendInterface $cache,
-    LowLevelAdapterInterface $datastream_storage
+    LowLevelAdapterInterface $datastream_storage,
+    LockBackendInterface $lock,
+    Connection $database
   ) {
     $this->cache = $cache;
     $this->datastreamStorage = $datastream_storage;
+    $this->lock = $lock;
+    $this->database = $database;
   }
 
   /**
@@ -154,11 +174,14 @@ class FoxmlParser extends AbstractParser {
    *
    * @param string $target
    *   A path/URL of a FOXML document to parse.
+   * @param bool $control_concurrency
+   *   Attempt to avoid having multiple processes concurrently parsing the exact
+   *   same file.
    *
    * @return \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
    *   The parsed document.
    */
-  public function parse($target) {
+  public function parse($target, bool $control_concurrency = FALSE) {
     $item = $this->cache->get($target);
     if ($item && $item->data) {
       // XXX: Renew the cache.
@@ -170,6 +193,76 @@ class FoxmlParser extends AbstractParser {
       );
       return $item->data;
     }
+
+    if ($control_concurrency) {
+      $lock_name = static::lockName($target);
+      $transaction = $this->database->startTransaction();
+      $got_lock = FALSE;
+      try {
+        // Attempt to acquire the lock.
+        $got_lock = $this->lock->acquire($lock_name, 600);
+
+        // If we did not get the lock, wait until it might have been released.
+        if (!$got_lock) {
+          $this->lock->wait($lock_name, 600);
+        }
+
+        // Proceed to do the parsing independent of concurrency control, which
+        // should:
+        // - having obtained the lock, proceed to parse and populate the cache
+        // - having waited for the lock, fetch the parsed results from the cache
+        //   upon re-entry; or,
+        // - having waited for the lock, fail to fetch the results from the
+        //   cache and proceed and attempt to parse ourselves should something
+        //   have prevented the original holder from populating the cache.
+        $result = $this->parse($target, FALSE);
+        if ($got_lock) {
+          $this->lock->release($lock_name);
+          $got_lock = FALSE;
+        }
+
+        return $result;
+      }
+      catch (\Exception $e) {
+        // Failed in some way, roll things back and rethrow.
+        $transaction->rollBack();
+        throw $e;
+      }
+      finally {
+        // If still have the lock somehow, let it go.
+        if ($got_lock) {
+          $this->lock->release($lock_name);
+        }
+      }
+    }
+
+    $parsed = $this->doParse($target);
+
+    $this->cache->set(
+      $target,
+      $parsed,
+      // XXX: Keep things a week.
+      time() + (3600 * 24 * 7)
+    );
+
+    return $parsed;
+  }
+
+  /**
+   * Heavy lifting of doing the parsing.
+   *
+   * @param string $target
+   *   A path/URL of a FOXML document to parse.
+   *
+   * @return \Drupal\foxml\Utility\Fedora3\Element\DigitalObject
+   *   The parsed document.
+   *
+   * @throws \Drupal\foxml\Utility\Fedora3\FoxmlParserException
+   *   Thrown when the XML parser encounters an error when parsing the FOXML.
+   * @throws \Exception
+   *   Thrown when we fail to obtain a DigitalObject from parsing.
+   */
+  protected function doParse($target) {
 
     $this->target = $target;
 
@@ -192,12 +285,6 @@ class FoxmlParser extends AbstractParser {
         throw new \Exception("Parsing did not produce a DigitalObject class; truncated/bad file?");
       }
 
-      $this->cache->set(
-        $target,
-        $this->output,
-        // XXX: Keep things a week.
-        time() + (3600 * 24 * 7)
-      );
       return $this->output;
     }
     finally {
