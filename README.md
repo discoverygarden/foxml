@@ -38,6 +38,10 @@ Install as usual, see
 [this](https://drupal.org/documentation/install/modules-themes/modules-8) for
 further information.
 
+### Other modules of particular interest
+
+* [`akubra_adapter`](https://github.com/discoverygarden/akubra_adapter/): Integrates with this module to allow access directly into data stored in an [Akubra](https://wiki.lyrasis.org/display/AKUBRA) file system structure making use of [Fedora 3's Hash-based ID mapping](https://github.com/fcrepo3/fcrepo/blob/37df51b9b857fd12c6ab8269820d406c3c4ad774/fcrepo-server/src/main/java/org/fcrepo/server/storage/lowlevel/akubra/HashPathIdMapper.java#L17-L68)
+
 ## Configuration
 
 Configuration to use the
