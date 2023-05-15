@@ -170,6 +170,20 @@ class FoxmlParser extends AbstractParser {
   }
 
   /**
+   * Helper; build out the name of a lock to use.
+   *
+   * @param string $target
+   *   The target for which to obtain a lock.
+   *
+   * @return string
+   *   The name of the lock to use. Note: The name of the lock actually used by
+   *   the back end may be different due to size constraints.
+   */
+  protected static function lockName(string $target) : string {
+    return "foxml__parser_lock__{$target}";
+  }
+
+  /**
    * Get a parse of the target document.
    *
    * @param string $target
