@@ -71,9 +71,10 @@ class Foxml extends LocalReadOnlyStream {
 
     try {
       $path = $this->{"{$subtype}Adapter"}->dereference($target_actual);
+      assert(is_string($path), 'Dereferenced path.');
     }
     catch (\Exception $e) {
-      var_dump('asdfasdf');
+      trigger_error('Failed to dereference URI.', E_USER_WARNING);
       return FALSE;
     }
 
