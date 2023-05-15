@@ -15,6 +15,9 @@ interface LowLevelAdapterInterface {
    *
    * @return string
    *   A URI/path to the given resource.
+   *
+   * @throws \Drupal\foxml\Utility\Fedora3\Exceptions\LowLevelDereferenceFailedException
+   *   Should be thrown if we fail to dereference the given ID.
    */
   public function dereference($id) : string;
 
