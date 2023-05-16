@@ -11,7 +11,6 @@ services:
       - '@cache.foxml_parsed'
       - '@foxml.parser.datastream_lowlevel_storage'
       - '@lock'
-      - '@database'
   cache.foxml_parsed:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

@@ -82,13 +82,6 @@ class FoxmlParser extends AbstractParser {
   ];
 
   /**
-   * The database service.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected Connection $database;
-
-  /**
    * Constructor.
    */
   public function __construct(
@@ -100,7 +93,6 @@ class FoxmlParser extends AbstractParser {
     $this->cache = $cache;
     $this->datastreamStorage = $datastream_storage;
     $this->lock = $lock;
-    $this->database = $database;
   }
 
   /**
@@ -210,7 +202,6 @@ class FoxmlParser extends AbstractParser {
 
     if ($control_concurrency) {
       $lock_name = static::lockName($target);
-      $transaction = $this->database->startTransaction();
       $got_lock = FALSE;
       try {
         // Attempt to acquire the lock.
@@ -236,11 +227,6 @@ class FoxmlParser extends AbstractParser {
         }
 
         return $result;
-      }
-      catch (\Exception $e) {
-        // Failed in some way, roll things back and rethrow.
-        $transaction->rollBack();
-        throw $e;
       }
       finally {
         // If still have the lock somehow, let it go.
