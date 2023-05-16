@@ -2,7 +2,6 @@
 
 namespace Drupal\foxml\Utility\Fedora3;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\foxml\Utility\Fedora3\Element\DigitalObject;
 use Drupal\Core\Cache\CacheBackendInterface;
