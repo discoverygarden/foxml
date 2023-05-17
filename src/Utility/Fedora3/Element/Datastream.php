@@ -103,4 +103,14 @@ class Datastream extends AbstractParser implements \ArrayAccess {
     return $this->latest()->content()->getUri();
   }
 
+  /**
+   * Helper; grab the versions of this datastream.
+   *
+   * @return \Drupal\foxml\Utility\Fedora3\Element\DatastreamVersion[]
+   *   The array of versions present for the given datastream.
+   */
+  public function getVersions() {
+    return $this->versions;
+  }
+
 }
