@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  *
  * Accepts:
- * - concurrency_control: A boolean indicating if we should attempt to control
+ * - control_concurrency: A boolean indicating if we should attempt to control
  *   concurrent parsing of the same file, with the expectation that things will
  *   well be able to make use of caches. TRUE to enable; FALSE to disable.
  *   Defaults to FALSE. For more details, see the related parameter of
