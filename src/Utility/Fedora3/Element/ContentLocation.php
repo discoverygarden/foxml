@@ -55,7 +55,7 @@ class ContentLocation extends AbstractParser {
         $this->uri = $this->REF;
       }
       elseif ($this->TYPE === 'INTERNAL_ID') {
-        $this->uri = $this->getFoxmlParser()->getDatastreamLowLevelAdapter()->dereference($this->REF);
+        $this->uri = "foxml://datastream/{$this->REF}";
       }
       else {
         throw new \Exception('Unhandled type.');
