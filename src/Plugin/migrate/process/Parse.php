@@ -19,6 +19,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @MigrateProcessPlugin(
  *   id = "foxml.parse"
  * )
+ *
+ * Accepts:
+ * - control_concurrency: A boolean indicating if we should attempt to control
+ *   concurrent parsing of the same file, with the expectation that things will
+ *   well be able to make use of caches. TRUE to enable; FALSE to disable.
+ *   Defaults to FALSE. For more details, see the related parameter of
+ *   \Drupal\foxml\Utility\Fedora3\FoxmlParser::parse() and its use.
  */
 class Parse extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
@@ -30,12 +37,20 @@ class Parse extends ProcessPluginBase implements ContainerFactoryPluginInterface
   protected $parser;
 
   /**
+   * Control concurrency.
+   *
+   * @var bool
+   */
+  protected bool $controlConcurrency = FALSE;
+
+  /**
    * Constructor.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, FoxmlParser $parser) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->parser = $parser;
+    $this->controlConcurrency = $this->configuration['control_concurrency'] ?? FALSE;
   }
 
   /**
@@ -57,7 +72,7 @@ class Parse extends ProcessPluginBase implements ContainerFactoryPluginInterface
     if (!is_string($value) || !file_exists($value)) {
       throw new MigrateException('The passed value is not a file path.');
     }
-    $parsed = $this->parser->parse($value);
+    $parsed = $this->parser->parse($value, $this->controlConcurrency);
     assert($parsed instanceof DigitalObject, "Parser parsed under $destination_property");
     return $parsed;
   }
