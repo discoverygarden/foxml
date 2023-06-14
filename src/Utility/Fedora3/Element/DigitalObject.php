@@ -3,6 +3,7 @@
 namespace Drupal\foxml\Utility\Fedora3\Element;
 
 use Drupal\foxml\Utility\Fedora3\AbstractParser;
+use Drupal\foxml\Utility\Fedora3\Element\Exception\NonExistentDatastreamException;
 
 /**
  * Element handler for foxml:digitalObject.
@@ -152,6 +153,9 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    */
   protected function xpath() {
     if (!isset($this->xpath)) {
+      if (!isset($this['RELS-EXT'])) {
+        throw new NonExistentDatastreamException($this->PID, 'RELS-EXT');
+      }
       $this->dom = new \DOMDocument();
       // XXX: An issue in the passing off of paths/URIs to libxml prevents the
       // use of DOMDocument::load().
@@ -180,13 +184,18 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    *   The results of the query.
    */
   protected function relsExtResourceQuery($query) {
-    $results = [];
+    try {
+      $results = [];
 
-    foreach ($this->xpath()->query($query) as $node) {
-      $results[] = $node->nodeValue;
+      foreach ($this->xpath()->query($query) as $node) {
+        $results[] = $node->nodeValue;
+      }
+
+      return $results;
     }
-
-    return $results;
+    catch (NonExistentDatastreamException $e) {
+      return [];
+    }
   }
 
   /**
