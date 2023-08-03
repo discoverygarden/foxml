@@ -18,8 +18,13 @@ services:
     factory: cache_factory:get
     arguments:
       - foxml_parsed
+  logger.channel.foxml:
+    parent: logger.channel_base
+    arguments: ['foxml']
   foxml.parser.object_lowlevel_storage:
     class: Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterManager
+    arguments:
+      - '@logger.channel.foxml'
     tags:
       - name: service_collector
         tag: foxml.parser.object_lowlevel_storage
