@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * General hook implementations.
+ */
+
+/**
+ * Implements hook_file_download().
+ */
+function foxml_file_download(string $uri) {
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+  $scheme = $stream_wrapper_manager->getScheme($uri);
+  if (!in_array($scheme, ['foxml', 'foxml.substream'])) {
+    return NULL;
+  }
+
+  /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+  $file_repository = \Drupal::service('file.repository');
+  $file = $file_repository->loadByUri($uri);
+
+  if (!$file) {
+    // Failed to load file entity, only grant access if the lower-level
+    // permission is present.
+    $user = \Drupal::currentUser();
+    return $user->hasPermission('access referenced foxml') ?
+      [
+        'Cache-Control' => 'private',
+      ] :
+      -1;
+  }
+  else {
+    // Assume that file_file_download() will handle it.
+    return NULL;
+  }
+}
