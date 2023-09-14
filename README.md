@@ -35,7 +35,7 @@ Scripts to analyse and export metadata from an FCREPO3 instance. Refer to the [R
 ## Installation
 
 Install as usual, see
-[this](https://drupal.org/documentation/install/modules-themes/modules-8) for
+[this](https://www.drupal.org/docs/extending-drupal/installing-modules) for
 further information.
 
 ### Other modules of particular interest
