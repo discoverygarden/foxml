@@ -48,15 +48,25 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
     // Recurse through the directory.
     $files = new \RecursiveDirectoryIterator($this->basePath, $flags);
 
+    // Pre-filter deletable files away.
+    // Adapted from: https://github.com/discoverygarden/akubra_adapter/blob/38000f45a25cf99c5f34a53cf93193e6fdff88b9/src/Utility/Fedora3/ObjectLowLevelAdapter.php#L35-L42
+    $non_deletable_files = new \RecursiveCallbackFilterIterator(
+      $files,
+      function (\SplFileInfo $file) {
+        return $file->isDir() || ($file->isFile() && $file->isReadable() &&
+            !$file->isWritable() && !$file->getPathInfo()->isWritable());
+      }
+    );
+
     // A filter could be added here if necessary.
     if ($this->pattern) {
       $filter = new \RecursiveCallbackFilterIterator(
-        $files,
+        $non_deletable_files,
         [$this, 'filterCallback']
       );
     }
     else {
-      $filter = $files;
+      $filter = $non_deletable_files;
     }
 
     // Get an iterator of our iterator...
@@ -87,28 +97,20 @@ class ArchivalObjectLowLevelAdapter implements ObjectLowLevelAdapterInterface {
    *
    * @param \SplFileInfo $current
    *   The item being considered.
-   * @param mixed $key
-   *   The key for the item being considered.
-   * @param \Iterator $iterator
-   *   The iterator in which this filter callback is being used.
    *
    * @return bool
    *   TRUE if the given item should be considered; otherwise, FALSE.
    *
    * @see https://github.com/discoverygarden/migrate_directory/blob/87d47cd69f037f5d239af0c8124c3ed433146413/src/Plugin/migrate/source/MigrateDirectory.php#L49-L62
    */
-  protected function filterCallback(\SplFileInfo $current, $key, \Iterator $iterator) : bool {
-    // Get the current item's name.
-    /** @var \SplFileInfo $current */
-    $filename = $current->getFilename();
-
+  protected function filterCallback(\SplFileInfo $current) : bool {
     if ($current->isDir()) {
       // Always descend into directories.
       return TRUE;
     }
 
     // Match the filename against the pattern.
-    return preg_match($this->pattern, $filename) === 1;
+    return preg_match($this->pattern, $current->getFilename()) === 1;
   }
 
   /**
