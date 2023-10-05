@@ -66,7 +66,13 @@ class Foxml extends LocalReadOnlyStream {
       $uri = $this->uri;
     }
     $target = $this->getTarget($uri);
-    [$subtype, $target_actual] = explode('/', $target, 2);
+    $exploded = explode('/', $target, 2);
+    if (count($exploded) === 1) {
+      // XXX: `foxml://object` and `foxml://datastream` on their own do not
+      // really point anywhere.
+      return FALSE;
+    }
+    [$subtype, $target_actual] = $exploded;
     assert(in_array($subtype, ['object', 'datastream']), 'Valid URI.');
 
     try {
