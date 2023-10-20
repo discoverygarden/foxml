@@ -5,6 +5,8 @@
  * General hook implementations.
  */
 
+
+
 /**
  * Implements hook_file_download().
  */
@@ -27,11 +29,14 @@ function foxml_file_download(string $uri) {
     return $user->hasPermission('access referenced foxml') ?
       [
         'Cache-Control' => 'private',
-      ] :
+      ] + $headers :
       -1;
   }
   else {
-    // Assume that file_file_download() will handle it.
-    return NULL;
+    $file_name = $file->getFileName();
+
+    return [
+      'Content-Disposition' => 'attachment; filename="' . $file_name . '"',
+    ];
   }
 }
