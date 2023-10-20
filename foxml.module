@@ -29,7 +29,7 @@ function foxml_file_download(string $uri) {
     return $user->hasPermission('access referenced foxml') ?
       [
         'Cache-Control' => 'private',
-      ] + $headers :
+      ] :
       -1;
   }
   else {
