@@ -5,8 +5,6 @@
  * General hook implementations.
  */
 
-
-
 /**
  * Implements hook_file_download().
  */
