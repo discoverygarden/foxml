@@ -31,7 +31,10 @@ function foxml_file_download(string $uri) {
       -1;
   }
   else {
-    // Assume that file_file_download() will handle it.
-    return NULL;
+    $file_name = $file->getFileName();
+
+    return [
+      'Content-Disposition' => 'attachment; filename="' . $file_name . '"',
+    ];
   }
 }
