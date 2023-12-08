@@ -20,11 +20,12 @@ class PathProcessorFiles implements InboundPathProcessorInterface {
    */
   public function processInbound($path, Request $request) {
     // Quick exit.
-    if (strpos($path, static::PREFIX) === 0 && !$request->query->has('file')) {
-      $rest = substr($path, strlen(static::PREFIX));
-
+    if (strpos($path, static::PREFIX) === 0) {
       // Routes to FileDownloadController::download().
-      $request->query->set('file', $rest);
+      if (!$request->query->has('file')) {
+        $rest = substr($path, strlen(static::PREFIX));
+        $request->query->set('file', $rest);
+      }
 
       return '/_foxml';
     }
