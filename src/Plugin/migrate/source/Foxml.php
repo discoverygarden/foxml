@@ -2,12 +2,12 @@
 
 namespace Drupal\foxml\Plugin\migrate\source;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
-use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
