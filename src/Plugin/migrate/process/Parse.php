@@ -6,9 +6,9 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 
 use Drupal\foxml\Utility\Fedora3\Element\DigitalObject;
 use Drupal\foxml\Utility\Fedora3\FoxmlParser;
-use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
