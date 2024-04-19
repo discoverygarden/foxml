@@ -1,5 +1,4 @@
 ### Non Version Specific Requirements
-pyyaml
 requests
 tqdm
 bs4
