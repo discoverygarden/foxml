@@ -1,56 +1,62 @@
 # FCREPO3 Analysis Helpers
-
 ## Introduction
-Scripts to analyse and export metadata from an FCREPO3 instance.
+Tools to analyse and export metadata from an FCREPO3 instance using Python scripts.
 
 ## Table of Contents
-
 * [Setup](#setup)
 * [Features](#features)
 * [Usage](#usage)
 
 ## Setup
+These tools are designed to be run with a Python environment. Ensure Python 3.6 or higher is installed on your system. You will need to set up a Python virtual environment and install the required packages:
 
-These scripts require an FCREPO3 instance to be run over. In the event, these scripts are run on a separate system from where
-the repository lives, modifications may be required to the `fedora-xacml-policies` directory located at `$FEDORA_HOME/data/fedora-xacml-policies`.
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-The metadata export command requires [GNU Parallel](https://www.gnu.org/software/parallel/parallel.html) to be installed
-for faster processing.
+The scripts also require an FCREPO3 instance. If these tools are run on a system separate from where the repository is hosted, modifications might be necessary in the `fedora-xacml-policies` directory at `$FEDORA_HOME/data/fedora-xacml-policies`.
 
 ## Features
-
 ### Metadata Analysis
-A script to generate the following:
-1. A total count of all objects in the repository.
-2. A breakdown of objects by content models and their count in CSV form (`models.csv`).
-3. A breakdown of unique datastream IDs and their count in CSV form (`dsids.csv`).
+Python scripts that perform the following:
+1. Count all objects in the repository.
+2. Provide a breakdown of objects by content models (`models.csv`).
+3. Output a breakdown of unique datastream IDs (`dsids.csv`).
 
 ### Metadata Export
-A script to export all objects within the repository that contain a specified metadata datastream ID.
+Scripts to export all objects within the repository that contain a specified metadata datastream ID, saving results as XML.
 
 ## Usage
-
 ### Metadata Analysis
 #### Command
 ```bash
-sudo bash /path_to_the_module/scripts/metadata_analysis.sh --fedora_pass=the_password
+python3 data_analysis.py --url=http://your-fedora-url --user=admin --password=secret --output_dir=./results
 ```
-
 #### Output
-```
-The total number of objects is 40.
-Outputted model breakdown to CSV (models.csv).
-Outputted DSID breakdown to CSV (dsids.csv).
-```
+Exports all queries found in `queries.py` to their own CSV in the `results` folder by default. Can be changed with the `--output_dir` flag.
 
 ### Metadata Export
 #### Command
 ```bash
-sudo bash shell_scripts/export_metadata.sh --fedora_pass=the_password --skip_auth_check
+python3 datastream_export.py --url=http://your-fedora-url:8080 --user=admin --password=secret --dsid=DSID --output_dir=./output --pid_file=./some_pids
 ```
-
-> Utilizing the `--skip_auth_check` flag here is an important performance optimization as it will greatly speed up the
-export operation due to not needing to validate the request prior.
+> The script supports adding comments in the pid_file using `#`. PIDs can also contain URL encoded characters (e.g., `%3A` for `:` which will be automatically decoded).
 
 #### Output
-The command does not output anything but will export all objects in the form of `the:pid-DSID.xml`.
+Exports all metadata entries related to the specified DSID into XML files stored in the defined output directory.
+Each file's name will be in the format `pid-DSID.xml`.
+
+### Datastream Updater
+#### Command
+```bash
+python3 datastream_updater.py --xml=input.xml --dsid=DSID --content=content.bin --label='New Version' --output=output.xml
+```
+> This script allows you to specify the XML file to modify, the datastream ID, the binary content file (which will be base64 encoded), and optionally a label for the new datastream version.
+
+The only non-required argument is `label` which is in the case if you want to specify a custom label. If previous datastream versions do not have a label and you didn't specify one in the args, it will prompt you for a new one.
+
+#### Output
+Updates the specified XML file with a new version of the datastream, encoding the provided binary content into base64. The updated XML is saved to the specified output file.
+
