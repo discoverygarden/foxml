@@ -20,13 +20,23 @@ The scripts also require an FCREPO3 instance. If these tools are run on a system
 
 ## Features
 ### Metadata Analysis
-Python scripts that perform the following:
-1. Count all objects in the repository.
-2. Provide a breakdown of objects by content models (`models.csv`).
-3. Output a breakdown of unique datastream IDs (`dsids.csv`).
+Script to run SPARQL queries against an FCREPO's RI and gather information. Current queries include:
+ - Content model distribution
+ - Total object count
+ - Count of active and deleted objects
+ - List of deleted objects
+ - Datastream distribution
+ - Owner distribution
+ - Collection distribution
+ - List of relationships
+ - List of orphaned objects
+ - MIME type distribution
 
 ### Metadata Export
-Scripts to export all objects within the repository that contain a specified metadata datastream ID, saving results as XML.
+Script to export all objects within the repository that contain a specified metadata datastream ID, saving results as XML.
+
+### Datastream Updater
+Script to inject a binary into an archival FOXML as base64 encoded data within a datastream.
 
 ## Usage
 ### Metadata Analysis
