@@ -36,6 +36,7 @@ def perform_http_request(query, endpoint_url, user, password, output_format="CSV
         print(f"Error {response.status_code} while querying: {query}")
         return None
 
+
 def process_pid_file(filepath):
     """
     Process a file containing PIDs (Persistent Identifiers) and return a list of PIDs.
