@@ -35,6 +35,9 @@ Script to run SPARQL queries against an FCREPO's RI and gather information. Curr
 ### Metadata Export
 Script to export all objects within the repository that contain a specified metadata datastream ID, saving results as XML.
 
+### FOXML Export
+Script to export FOXML archival objects from a Fedora repository given a list of PIDs.
+
 ### Datastream Updater
 Script to inject a binary into an archival FOXML as base64 encoded data within a datastream.
 
@@ -57,6 +60,16 @@ python3 datastream_export.py --url=http://your-fedora-url:8080 --user=admin --pa
 #### Output
 Exports all metadata entries related to the specified DSID into XML files stored in the defined output directory.
 Each file's name will be in the format `pid-DSID.xml`.
+
+### FOXML Export
+#### Command
+```bash
+python3 foxml_export.py --url=http://your-fedora-url:8080 --user=admin --pasword=secret --pid_file=./some_pids --output_dir=./output
+```
+> The script supports adding comments in the pid_file using `#`. PIDs can also contain URL encoded characters (e.g., `%3A` for `:` which will be automatically decoded).
+
+#### Output
+Exports all archival FOXML found in the associated PID file passed in through arguments to their own folder in `output_dir/FOXML`.
 
 ### Datastream Updater
 #### Command
