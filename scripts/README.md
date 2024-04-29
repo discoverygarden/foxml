@@ -55,7 +55,8 @@ Exports all queries found in `queries.py` to their own CSV in the `results` fold
 ```bash
 python3 datastream_export.py --url=<http://your-fedora-url:8080> --user=<admin> --password=<secret> --dsid=<DSID> --output_dir=<./output> --pid_file=<./some_pids>
 ```
-> The script supports adding comments in the pid_file using `#`. PIDs can also contain URL encoded characters (e.g., `%3A` for `:` which will be automatically decoded).
+> The script supports adding comments in the pid_file using `#`. PIDs can also contain URL encoded characters (e.g., `%3A` for `:` which will be automatically decoded). Expected format of the `pid_file` is one PID per line.
+If `--pid_file` isn't specified, the script will do a query intended to get a list of all pids in the system and export all of them.
 
 #### Output
 Exports all metadata entries related to the specified DSID into XML files stored in the defined output directory.
