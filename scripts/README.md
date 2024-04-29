@@ -8,7 +8,7 @@ Tools to analyse and export metadata from an FCREPO3 instance using Python scrip
 * [Usage](#usage)
 
 ## Setup
-These tools are designed to be run with a Python environment. Ensure Python 3.6 or higher is installed on your system. You will need to set up a Python virtual environment and install the required packages:
+These tools are designed to be run with a Python environment. Ensure Python 3.6 or higher is installed on your system; you can check the version with `python3 --version`. You will need to set up a Python virtual environment and install the required packages; this can be done using these command within this 'scripts' directory:
 
 ```bash
 python3 -m venv venv
