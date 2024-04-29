@@ -53,7 +53,7 @@ Exports all queries found in `queries.py` to their own CSV in the `results` fold
 ### Metadata Export
 #### Command
 ```bash
-python3 datastream_export.py --url=http://your-fedora-url:8080 --user=admin --password=secret --dsid=DSID --output_dir=./output --pid_file=./some_pids
+python3 datastream_export.py --url=<http://your-fedora-url:8080> --user=<admin> --password=<secret> --dsid=<DSID> --output_dir=<./output> --pid_file=<./some_pids>
 ```
 > The script supports adding comments in the pid_file using `#`. PIDs can also contain URL encoded characters (e.g., `%3A` for `:` which will be automatically decoded).
 
