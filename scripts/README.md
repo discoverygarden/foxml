@@ -45,7 +45,7 @@ Script to inject a binary into an archival FOXML as base64 encoded data within a
 ### Metadata Analysis
 #### Command
 ```bash
-python3 data_analysis.py --url=http://your-fedora-url --user=admin --password=secret --output_dir=./results
+python3 data_analysis.py --url=<http://your-fedora-url> --user=<admin> --password=<secret> --output_dir=<./results>
 ```
 #### Output
 Exports all queries found in `queries.py` to their own CSV in the `results` folder by default. Can be changed with the `--output_dir` flag.
