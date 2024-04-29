@@ -67,7 +67,7 @@ Each file's name will be in the format `pid-DSID.xml`.
 ```bash
 python3 foxml_export.py --url=<http://your-fedora-url:8080> --user=<admin> --pasword=<secret> --pid_file=<./some_pids_to_export> --output_dir=<./output>
 ```
-> The script supports adding comments in the pid_file using `#`. PIDs can also contain URL encoded characters (e.g., `%3A` for `:` which will be automatically decoded).
+> The script supports adding comments in the pid_file using `#`. PIDs can also contain URL encoded characters (e.g., `%3A` for `:` which will be automatically decoded). Expected format of the `pid_file` is one PID per line.
 
 #### Output
 Exports all archival FOXML found in the associated PID file passed in through arguments to their own folder in `output_dir/FOXML`.
