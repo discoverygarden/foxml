@@ -84,3 +84,6 @@ The only non-required argument is `label` which is in the case if you want to sp
 #### Output
 Updates the specified XML file with a new version of the datastream, encoding the provided binary content into base64. The updated XML is saved to the specified output file.
 
+## Known Issues:
+* `datastream_updater.py` is very finnicky and will probably fail on most FOXML objects.
+  * The eventual intention with this script is to update it using `xmltodict`, and simplify it even more. Most of its current issues derive from XML namespaces.
