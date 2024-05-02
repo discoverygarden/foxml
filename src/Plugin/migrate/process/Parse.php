@@ -2,14 +2,14 @@
 
 namespace Drupal\foxml\Plugin\migrate\process;
 
-use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\Row;
-use Drupal\migrate\MigrateException;
-use Drupal\foxml\Utility\Fedora3\FoxmlParser;
-use Drupal\foxml\Utility\Fedora3\Element\DigitalObject;
-
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+
+use Drupal\foxml\Utility\Fedora3\Element\DigitalObject;
+use Drupal\foxml\Utility\Fedora3\FoxmlParser;
+use Drupal\migrate\MigrateException;
+use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\ProcessPluginBase;
+use Drupal\migrate\Row;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

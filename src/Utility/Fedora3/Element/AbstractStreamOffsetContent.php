@@ -2,8 +2,8 @@
 
 namespace Drupal\foxml\Utility\Fedora3\Element;
 
-use Drupal\foxml\Utility\Fedora3\AbstractParser;
 use Drupal\foxml\StreamWrapper\Substream;
+use Drupal\foxml\Utility\Fedora3\AbstractParser;
 
 /**
  * Abstract element handler for inline content.

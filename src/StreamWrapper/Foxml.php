@@ -2,12 +2,12 @@
 
 namespace Drupal\foxml\StreamWrapper;
 
-use Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface;
-use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
-
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\StreamWrapper\LocalReadOnlyStream;
 use Drupal\Core\Url;
+
+use Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface;
+use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
 
 /**
  * FOXML stream wrapper.
