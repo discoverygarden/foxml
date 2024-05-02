@@ -18,7 +18,7 @@ queries = {
     """,
 
     "active_deleted_count": """
-        SELECT (COUNT(?activeObj) AS ?ActiveCount) (COUNT(?deletedObj) AS ?DeletedCount)
+        SELECT (COUNT(?activeObj) AS ?active) (COUNT(?deletedObj) AS ?deleted) (COUNT(?inactiveObj) AS ?inactive)
         FROM <#ri>
         WHERE {
             {
@@ -31,6 +31,11 @@ queries = {
                 WHERE {
                     ?deletedObj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Deleted> .
                 }
+            } UNION {
+                SELECT ?inactiveObj
+                WHERE {
+                    ?inactiveObj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Inactive> .
+                }
             }
         }
     """,
@@ -40,6 +45,14 @@ queries = {
         FROM <#ri>
         WHERE {
             ?obj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Deleted>
+        }
+    """,
+
+    "inactive_objects": """
+        SELECT ?obj
+        FROM <#ri>
+        WHERE {
+            ?obj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Inactive>
         }
     """,
 
@@ -69,7 +82,8 @@ queries = {
         SELECT ?collection (COUNT(?obj) as ?count)
         FROM <#ri>
         WHERE {
-            ?obj <info:fedora/fedora-system:def/relations-external#isMemberOfCollection> ?collection;
+            ?obj <info:fedora/fedora-system:def/relations-external#isMemberOfCollection> ?collection .
+            ?collection <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0>
         }
         GROUP BY ?collection
     """,
