@@ -32,6 +32,10 @@ Script to run SPARQL queries against an FCREPO's RI and gather information. Curr
  - List of orphaned objects
  - MIME type distribution
 
+ Before running this as a script, you might want to verify that the queries provided in `queries.py` are compatible with the system you are querying. If the system has Mulgara instead of Blazegraph, it would be restricted to SPARQL 1.0; to check what features would not be available for SPARQL 1.0, you can see a list of new features added in SPARQL 1.1 at the bottom of https://www.w3.org/TR/sparql11-query/.
+
+If you find that the system you are querying has some relationships outside of the ones covered in these queries by default, you will need to modify the relevant queries to get an accurate analysis. For example, sometimes there are relationships that have different capitalization or typos; these relationships need to be accounted for in this analysis phase for completeness and accuracy of the analysis as well as ensuring they get mapped appropriately in the actual migration.
+
 ### Metadata Export
 Script to export all objects (or a specified list of PIDs) within the repository that contain a specified metadata datastream ID, saving results as XML.
 
