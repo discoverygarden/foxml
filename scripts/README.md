@@ -33,7 +33,7 @@ Script to run SPARQL queries against an FCREPO's RI and gather information. Curr
  - MIME type distribution
 
 ### Metadata Export
-Script to export all objects within the repository that contain a specified metadata datastream ID, saving results as XML.
+Script to export all objects (or a specified list of PIDs) within the repository that contain a specified metadata datastream ID, saving results as XML.
 
 ### FOXML Export
 Script to export FOXML archival objects from a Fedora repository given a list of PIDs.
