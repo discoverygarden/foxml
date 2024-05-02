@@ -75,7 +75,7 @@ Exports all archival FOXML found in the associated PID file passed in through ar
 ### Datastream Updater
 #### Command
 ```bash
-python3 datastream_updater.py --xml=input.xml --dsid=DSID --content=content.bin --label='New Version' --output=output.xml
+python3 datastream_updater.py --xml=<input.xml> --dsid=<DSID> --content=<content.bin> --label=<'New Version'> --output=<output.xml>
 ```
 > This script allows you to specify the XML file to modify, the datastream ID, the binary content file (which will be base64 encoded), and optionally a label for the new datastream version.
 
