@@ -24,7 +24,7 @@ def get_content_models(base_url, user, password):
         return []
     
     lines = response_text.splitlines()
-    models = [line.strip() for line in lines[1:]]  # Skip the header
+    models = [line.strip() for line in lines[1:]]
     return models
 
 def get_pids_for_model_and_dsid(base_url, user, password, model, dsid):
@@ -43,7 +43,7 @@ def get_pids_for_model_and_dsid(base_url, user, password, model, dsid):
     
     lines = response_text.splitlines()
     results = []
-    for line in lines[1:]:  # Skip the header
+    for line in lines[1:]:
         parts = line.split(',')
         if len(parts) < 3:
             continue
@@ -63,18 +63,21 @@ def get_pids(base_url, user, password, dsids):
                 if model not in all_pids:
                     all_pids[model] = {}
                 if dsid not in all_pids[model]:
-                    all_pids[model][dsid] = []
-                all_pids[model][dsid].append(pid)
+                    all_pids[model][dsid] = set()
+                all_pids[model][dsid].add(pid)
     return all_pids
 
 def write_pids_to_file(pids, output_dir):
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, "sample_data_pids.txt")
+    all_unique_pids = set()
     with open(output_file, "w") as f:
         for model, ds_dict in pids.items():
-            for dsid, pid_list in ds_dict.items():
-                for pid in pid_list:
-                    f.write(f"{pid}\n")
+            for dsid, pid_set in ds_dict.items():
+                for pid in pid_set:
+                    if pid not in all_unique_pids:
+                        f.write(f"{pid}\n")
+                        all_unique_pids.add(pid)
     print(f"PIDs written to {output_file}")
 
 def main():
@@ -89,9 +92,9 @@ def main():
     else:
         for model, ds_dict in pids.items():
             print(f"\nContent Model: {model}")
-            for dsid, pid_list in ds_dict.items():
+            for dsid, pid_set in ds_dict.items():
                 print(f"  Datastream: {dsid}")
-                for pid in pid_list:
+                for pid in pid_set:
                     print(f"    PID: {pid}")
         
         write_pids_to_file(pids, args.output_dir)
