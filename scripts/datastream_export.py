@@ -48,7 +48,7 @@ def fetch_data(dsid, base_url, user, password, output_dir, pid):
         dsid_dir = os.path.join(output_dir, dsid)
         os.makedirs(dsid_dir, exist_ok=True)
         content_type = response.headers.get("Content-Type", "")
-        extension = mimetypes.guess_extension(content_type) if content_type else ""
+        extension = ".xml" if dsid == "MODS" else mimetypes.guess_extension(content_type) or ""
         filename = f"{pid}-{dsid}{extension}"
         with open(os.path.join(dsid_dir, filename), "wb") as f:
             f.write(response.content)
