@@ -135,8 +135,6 @@ class Foxml extends LocalReadOnlyStream {
     return 'FOXML object/datastream storage dereferencing.';
   }
 
-
-
   /**
    * {@inheritDoc}
    * phpcs:disable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps

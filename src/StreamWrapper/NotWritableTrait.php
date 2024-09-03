@@ -6,7 +6,6 @@ namespace Drupal\foxml\StreamWrapper;
  * Helper trait to mask writability from file modes.
  */
 trait NotWritableTrait {
-  protected const WRITE_MASK = ~0o222;
 
   /**
    * Apply mask to suppress writability being reported.
@@ -22,7 +21,7 @@ trait NotWritableTrait {
       return FALSE;
     }
 
-    $result[2] = ($result['mode'] &= static::WRITE_MASK);
+    $result[2] = ($result['mode'] &= !0o222);
 
     return $result;
   }
