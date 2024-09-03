@@ -14,6 +14,8 @@ use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
  */
 class Foxml extends LocalReadOnlyStream {
 
+  use NotWritableTrait;
+
   /**
    * The datastream low-level adapter manager service.
    *
@@ -133,37 +135,21 @@ class Foxml extends LocalReadOnlyStream {
     return 'FOXML object/datastream storage dereferencing.';
   }
 
-  protected const WRITE_MASK = ~0o222;
+
 
   /**
    * {@inheritDoc}
    * phpcs:disable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
    */
   public function url_stat($uri, $flags) {
-    $result = parent::url_stat($uri, $flags);
-
-    if ($result === FALSE) {
-      return FALSE;
-    }
-
-    $result[2] = ($result['mode'] &= static::WRITE_MASK);
-
-    return $result;
+    return static::applyMask(parent::url_stat($uri, $flags));
   }
 
   /**
    * {@inheritDoc}
    */
   public function stream_stat() {
-    $result = parent::stream_stat();
-
-    if ($result === FALSE) {
-      return FALSE;
-    }
-
-    $result[2] = ($result['mode'] &= static::WRITE_MASK);
-
-    return $result;
+    return static::applyMask(parent::stream_stat());
   } // phpcs:enable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 
 }
