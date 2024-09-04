@@ -21,7 +21,7 @@ trait NotWritableTrait {
       return FALSE;
     }
 
-    $result[2] = ($result['mode'] &= !0o222);
+    $result[2] = ($result['mode'] &= ~0o222);
 
     return $result;
   }
