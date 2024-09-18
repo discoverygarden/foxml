@@ -90,7 +90,7 @@ class Datastream extends AbstractParser implements \ArrayAccess {
    * {@inheritdoc}
    */
   public function offsetUnset($offset) {
-    throw new Exception('Not implemented.');
+    throw new \Exception('Not implemented.');
   }
 
   /**

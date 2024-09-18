@@ -3,8 +3,10 @@
 namespace Drupal\foxml\Plugin\migrate\source;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
+use Drupal\foxml\StreamWrapper\FoxmlInterface;
 use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -24,23 +26,16 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
   use StringTranslationTrait;
 
   /**
-   * The object store from which we are to operate.
-   *
-   * @var \Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface
-   */
-  protected $objectStorage;
-
-  /**
    * Constructor.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    MigrationInterface $migration,
-    ObjectLowLevelAdapterInterface $object_storage
+    ?MigrationInterface $migration,
+    protected ObjectLowLevelAdapterInterface $objectStorage,
+    protected StreamWrapperManagerInterface $streamWrapperManager,
   ) {
-    $this->objectStorage = $object_storage;
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
   }
 
@@ -52,7 +47,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    MigrationInterface $migration = NULL
+    MigrationInterface $migration = NULL,
   ) {
     // Allow a specific storage to be targeted.
     $object_service_name = $configuration['object_service_name'] ?? 'foxml.parser.object_lowlevel_storage';
@@ -62,7 +57,8 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get($object_service_name)
+      $container->get($object_service_name),
+      $container->get('stream_wrapper_manager'),
     );
   }
 
@@ -106,7 +102,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    */
   protected function generatePaths() : \Traversable {
     foreach ($this->generateIds() as $id) {
-      yield $id => "foxml://object/{$id}";
+      yield $id => $this->getFoxmlStreamWrapper()->getObjectUri($id);
     }
   }
 
@@ -141,14 +137,14 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    *   - extension: The file's extension.
    *   - uri: A URI to the file.
    */
-  protected static function mapSplfileinfoToArray(\SplFileInfo $fileinfo, $id) : array {
+  protected function mapSplfileinfoToArray(\SplFileInfo $fileinfo, $id) : array {
     return [
       'path' => $fileinfo->getPathname(),
       'absolute_path' => $fileinfo->getRealPath(),
       'filename' => $fileinfo->getFilename(),
       'basename' => $fileinfo->getBasename(),
       'extension' => $fileinfo->getExtension(),
-      'uri' => "foxml://object/{$id}",
+      'uri' => $this->getFoxmlStreamWrapper()->getObjectUri($id),
     ];
   }
 
@@ -157,7 +153,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    */
   protected function generateFileinfoArray() : \Traversable {
     foreach ($this->prefilter($this->generateFileinfo()) as $id => $info) {
-      yield $id => static::mapSplfileinfoToArray($info, $id);
+      yield $id => $this->mapSplfileinfoToArray($info, $id);
     }
   }
 
@@ -228,6 +224,16 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
     }
 
     return $vars;
+  }
+
+  /**
+   * Helper; get the FOXML stream wrapper.
+   *
+   * @return \Drupal\foxml\StreamWrapper\FoxmlInterface
+   *   The foxml:// stream wrapper implementation.
+   */
+  protected function getFoxmlStreamWrapper() : FoxmlInterface {
+    return $this->streamWrapperManager->getViaScheme('foxml');
   }
 
 }

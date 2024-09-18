@@ -84,14 +84,14 @@ class DatastreamVersion extends AbstractParser {
         $this->digests[$old->id()] = $old;
       }
       else {
-        throw new Exception("Avoiding replacing {$old->id()} hash entry.");
+        throw new \Exception("Avoiding replacing {$old->id()} hash entry.");
       }
     }
     elseif ($this->content === NULL) {
       $this->content = $old;
     }
     else {
-      throw new Exception('Avoiding replacing content.');
+      throw new \Exception('Avoiding replacing content.');
     }
 
     return $old;

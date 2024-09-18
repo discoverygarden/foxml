@@ -55,7 +55,16 @@ class ContentLocation extends AbstractParser {
         $this->uri = $this->REF;
       }
       elseif ($this->TYPE === 'INTERNAL_ID') {
-        $this->uri = "foxml://datastream/{$this->REF}";
+        /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+        $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+        /** @var \Drupal\foxml\StreamWrapper\FoxmlInterface $foxml_wrapper */
+        $foxml_wrapper = $stream_wrapper_manager->getViaScheme('foxml');
+
+        // XXX: No MIME-type info available here at the moment. Would need to
+        // either pass it in, or have some means to access it from whatever
+        // wrapping element (the datastream version?).
+        // @todo Figure some way to get a better extension than ".bin".
+        $this->uri = $foxml_wrapper->getDatastreamUri($this->REF, 'bin');
       }
       else {
         throw new \Exception('Unhandled type.');

@@ -12,7 +12,7 @@ use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
 /**
  * FOXML stream wrapper.
  */
-class Foxml extends LocalReadOnlyStream {
+class Foxml extends LocalReadOnlyStream implements FoxmlInterface {
 
   use NotWritableTrait;
 
@@ -68,7 +68,7 @@ class Foxml extends LocalReadOnlyStream {
       $uri = $this->uri;
     }
     $target = $this->getTarget($uri);
-    $exploded = explode('/', $target, 2);
+    $exploded = explode('/', $target, 3);
     if (count($exploded) === 1) {
       // XXX: `foxml://object` and `foxml://datastream` on their own do not
       // really point anywhere.
@@ -149,5 +149,19 @@ class Foxml extends LocalReadOnlyStream {
   public function stream_stat() {
     return static::applyMask(parent::stream_stat());
   } // phpcs:enable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getObjectUri(string $id) : string {
+    return "foxml://object/{$id}/fo.xml";
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getDatastreamUri(string $id, string $extension) : string {
+    return "foxml://datastream/{$id}/placeholder.{$extension}";
+  }
 
 }
