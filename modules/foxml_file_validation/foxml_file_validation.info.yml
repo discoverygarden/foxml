@@ -1,0 +1,8 @@
+---
+name: 'FOXML File Validation'
+description: "Extended file validation to allow "
+type: module
+package: DGI
+core_version_requirement: ^10.2
+dependencies:
+  - foxml:foxml
