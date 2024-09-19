@@ -62,11 +62,7 @@ class FoxmlFileExtensionBypassConstraint extends Constraint implements Container
    *   The wrapped constraint.
    */
   public function getWrappedConstraint() : Constraint {
-    if (!isset($this->wrapped)) {
-      $this->wrapped = $this->constraintManager->create('FoxmlFileValidationOriginalFileExtension', $this->options);
-    }
-
-    return $this->wrapped;
+    return $this->wrapped ??= $this->constraintManager->create('FoxmlFileValidationOriginalFileExtension', $this->options);
   }
 
 }

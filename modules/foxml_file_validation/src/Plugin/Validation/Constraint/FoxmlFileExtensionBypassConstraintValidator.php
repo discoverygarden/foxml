@@ -67,11 +67,7 @@ class FoxmlFileExtensionBypassConstraintValidator extends BaseFileConstraintVali
    *   Constraint validator factory service.
    */
   protected function getConstraintValueFactory() : ConstraintValidatorFactory {
-    if (!isset($this->constraintValidatorFactory)) {
-      $this->constraintValidatorFactory = new ConstraintValidatorFactory($this->classResolver);
-    }
-
-    return $this->constraintValidatorFactory;
+    return $this->constraintValidatorFactory ??= new ConstraintValidatorFactory($this->classResolver);
   }
 
 }
