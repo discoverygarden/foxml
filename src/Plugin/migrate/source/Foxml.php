@@ -106,7 +106,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
    */
   protected function generatePaths() : \Traversable {
     foreach ($this->generateIds() as $id) {
-      yield $id => $this->objectStorage->dereference($id);
+      yield $id => "foxml://object/{$id}";
     }
   }
 

@@ -14,6 +14,8 @@ use const iqb\stream\SUBSTREAM_SCHEME;
 class Substream extends ReadOnlyStream {
   const SCHEME = 'foxml.substream';
 
+  use NotWritableTrait;
+
   /**
    * The target resource from which to extract the substream.
    *
@@ -202,7 +204,7 @@ class Substream extends ReadOnlyStream {
    * {@inheritdoc}
    */
   public function stream_stat() {
-    return fstat($this->proxy);
+    return static::applyMask(fstat($this->proxy));
   }
 
   /**
@@ -260,7 +262,7 @@ class Substream extends ReadOnlyStream {
     $target_stat = stat($target);
 
     if ($target_stat) {
-      return $stat + $target_stat;
+      return static::applyMask($stat + $target_stat);
     }
     else {
       throw new \Exception(strtr('Failed to stat target !file for !path', [
