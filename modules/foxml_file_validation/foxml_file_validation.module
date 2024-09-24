@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * General hook implementations.
+ */
+
+use Drupal\foxml_file_validation\Plugin\Validation\Constraint\FoxmlFileExtensionBypassConstraint;
+
+/**
+ * Implements hook_validation_constraint_alter().
+ */
+function foxml_file_validation_validation_constraint_alter(array &$definitions) : void {
+  $definitions['FoxmlFileValidationOriginalFileExtension'] = $definitions['FileExtension'];
+  $definitions['FileExtension']['class'] = FoxmlFileExtensionBypassConstraint::class;
+}
