@@ -108,6 +108,9 @@ queries = {
             FILTER NOT EXISTS {
                 ?orphan <info:fedora/fedora-system:def/relations-external#isMemberOfCollection> ?subject .
             }
+            FILTER NOT EXISTS {
+                ?orphan <info:fedora/fedora-system:def/relations-external#isConstituentOf> ?subject
+            }
         }
     """,
 
