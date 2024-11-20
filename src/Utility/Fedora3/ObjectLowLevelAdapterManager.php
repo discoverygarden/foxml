@@ -21,7 +21,7 @@ class ObjectLowLevelAdapterManager extends AbstractLowLevelAdapterManager implem
    * Constructor.
    */
   public function __construct(
-    LoggerInterface $logger
+    LoggerInterface $logger,
   ) {
     $this->logger = $logger;
   }
