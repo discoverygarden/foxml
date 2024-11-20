@@ -4,11 +4,9 @@ namespace Drupal\foxml\Plugin\migrate\source;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-
 use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
-use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrationInterface;
-
+use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -38,7 +36,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
     $plugin_id,
     $plugin_definition,
     MigrationInterface $migration,
-    ObjectLowLevelAdapterInterface $object_storage
+    ObjectLowLevelAdapterInterface $object_storage,
   ) {
     $this->objectStorage = $object_storage;
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
@@ -52,7 +50,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    MigrationInterface $migration = NULL
+    ?MigrationInterface $migration = NULL,
   ) {
     // Allow a specific storage to be targeted.
     $object_service_name = $configuration['object_service_name'] ?? 'foxml.parser.object_lowlevel_storage';

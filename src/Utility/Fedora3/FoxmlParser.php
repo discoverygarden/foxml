@@ -86,7 +86,7 @@ class FoxmlParser extends AbstractParser {
   public function __construct(
     CacheBackendInterface $cache,
     LowLevelAdapterInterface $datastream_storage,
-    LockBackendInterface $lock
+    LockBackendInterface $lock,
   ) {
     $this->cache = $cache;
     $this->datastreamStorage = $datastream_storage;

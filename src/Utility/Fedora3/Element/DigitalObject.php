@@ -218,10 +218,12 @@ class DigitalObject extends AbstractParser implements \ArrayAccess {
    * @return string[]
    *   The collection parents of the given object.
    */
-  public function parents(array $predicates = [
-    'isMemberOf',
-    'isMemberOfCollection',
-  ]) {
+  public function parents(
+    array $predicates = [
+      'isMemberOf',
+      'isMemberOfCollection',
+    ],
+  ) {
     assert(count($predicates) > 0, 'Has at least one predicate for which to look.');
     $map = function ($pred) {
       return "self::fre:$pred";
