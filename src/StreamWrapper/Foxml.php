@@ -96,8 +96,8 @@ class Foxml extends LocalReadOnlyStream {
     $realpath = $this->fileSystem->realpath($path);
     if (!$realpath) {
 
-      // This file does not yet exist.
-      $realpath = $this->fileSystem->realpath(dirname($path)) . '/' .
+      // This file does not yet exist, or $path references something remote.
+      $realpath = $this->fileSystem->dirname($path) . '/' .
         $this->fileSystem->basename($path);
     }
 
