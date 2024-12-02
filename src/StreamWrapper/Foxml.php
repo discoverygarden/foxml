@@ -253,7 +253,7 @@ class Foxml extends ReadOnlyStream {
    */
   public function stream_tell() {
     return ftell($this->handle);
-  }
+  } // phpcs:enable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 
   /**
    * {@inheritDoc}
@@ -276,6 +276,6 @@ class Foxml extends ReadOnlyStream {
   public function dirname($uri = NULL) {
     trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
     return FALSE;
-  } // phpcs:enable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
+  }
 
 }
