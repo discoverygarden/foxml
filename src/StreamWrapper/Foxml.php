@@ -3,7 +3,8 @@
 namespace Drupal\foxml\StreamWrapper;
 
 use Drupal\Core\File\FileSystem;
-use Drupal\Core\StreamWrapper\LocalReadOnlyStream;
+use Drupal\Core\StreamWrapper\ReadOnlyStream;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Url;
 
 use Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface;
@@ -12,7 +13,7 @@ use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
 /**
  * FOXML stream wrapper.
  */
-class Foxml extends LocalReadOnlyStream {
+class Foxml extends ReadOnlyStream {
 
   use NotWritableTrait;
 
@@ -53,14 +54,7 @@ class Foxml extends LocalReadOnlyStream {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getDirectoryPath() {
-    throw new \Exception('Overides ::getLocalPath(), so this is not necessary.');
-  }
-
-  /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   protected function getLocalPath($uri = NULL) {
     // XXX: Adapted from LocalReadOnlyStream::getLocalPath().
@@ -110,8 +104,7 @@ class Foxml extends LocalReadOnlyStream {
   public function getExternalUrl() {
     // XXX: Copypasta from
     // \Drupal\Core\StreamWrapper\PrivateStream::getExternalUrl().
-    $path = str_replace('\\', '/', $this
-      ->getTarget());
+    $path = str_replace('\\', '/', $this->getTarget());
     return Url::fromRoute('foxml.download', [
       'filepath' => $path,
     ], [
@@ -119,6 +112,32 @@ class Foxml extends LocalReadOnlyStream {
       'path_processing' => FALSE,
     ])
       ->toString();
+  }
+
+  /**
+   * Returns the local target of the resource within the stream.
+   *
+   * This function should be used in place of calls to realpath() or similar
+   * functions when attempting to determine the location of a file. While
+   * functions like realpath() may return the location of a read-only file, this
+   * method may return a URI or path suitable for writing that is completely
+   * separate from the URI used for reading.
+   *
+   * @param null|string $uri
+   *   Optional URI.
+   *
+   * @return string
+   *   Returns a string representing a location suitable for writing of a file.
+   */
+  protected function getTarget(?string $uri = NULL) : string {
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+
+    [, $target] = explode('://', $uri, 2);
+
+    // Remove erroneous leading or trailing, forward-slashes and backslashes.
+    return trim($target, '\/');
   }
 
   /**
@@ -139,15 +158,124 @@ class Foxml extends LocalReadOnlyStream {
    * {@inheritDoc}
    * phpcs:disable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
    */
-  public function url_stat($uri, $flags) {
-    return static::applyMask(parent::url_stat($uri, $flags));
+  public function url_stat($path, $flags) {
+    return ($flags & STREAM_URL_STAT_QUIET) ?
+      @static::applyMask(stat($this->getLocalPath($path))) :
+      static::applyMask(stat($this->getLocalPath($path)));
   }
 
   /**
    * {@inheritDoc}
    */
   public function stream_stat() {
-    return static::applyMask(parent::stream_stat());
+    return static::applyMask(fstat($this->handle));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function dir_closedir() {
+    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    return TRUE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function dir_opendir($path, $options) {
+    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function dir_readdir() {
+    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function dir_rewinddir() {
+    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function stream_cast($cast_as) {
+    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function stream_close() {
+    $result = fclose($this->handle);
+    unset($this->handle);
+    return $result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function stream_eof() {
+    return feof($this->handle);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function stream_read($count) {
+    return fread($this->handle, $count);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function stream_seek($offset, $whence = SEEK_SET) {
+    return fseek($this->handle, $offset, $whence);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function stream_set_option($option, $arg1, $arg2) {
+    return stream_context_set_option($this->handle, $option, $arg1, $arg2);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function stream_tell() {
+    return ftell($this->handle);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function getType() {
+    return StreamWrapperInterface::HIDDEN;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function realpath() {
+    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function dirname($uri = NULL) {
+    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    return FALSE;
   } // phpcs:enable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 
 }
