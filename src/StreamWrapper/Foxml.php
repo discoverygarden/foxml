@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 
 use Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface;
 use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * FOXML stream wrapper.
@@ -39,6 +40,13 @@ class Foxml extends ReadOnlyStream {
   protected FileSystem $fileSystem;
 
   /**
+   * Logging channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected LoggerInterface $logger;
+
+  /**
    * Constructor.
    *
    * Note this cannot take any arguments; PHP's stream wrapper users
@@ -50,6 +58,7 @@ class Foxml extends ReadOnlyStream {
     $this->datastreamAdapter = \Drupal::service('foxml.parser.datastream_lowlevel_storage');
     $this->objectAdapter = \Drupal::service('foxml.parser.object_lowlevel_storage');
     $this->fileSystem = \Drupal::service('file_system');
+    $this->logger = \Drupal::service('logger.channel.foxml');
     // phpcs:enable
   }
 
@@ -76,7 +85,11 @@ class Foxml extends ReadOnlyStream {
       assert(is_string($path), 'Dereferenced path.');
     }
     catch (\Exception $e) {
-      trigger_error('Failed to dereference URI.', E_USER_WARNING);
+      $this->logger->warning('Failed to dereference URI "{uri}". Exception info: {message}, {trace}', [
+        'uri' => $uri,
+        'message' => $e->getMessage(),
+        'trace' => $e->getTraceAsString(),
+      ]);
       return FALSE;
     }
 
