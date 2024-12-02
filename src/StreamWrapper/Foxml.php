@@ -128,19 +128,19 @@ class Foxml extends ReadOnlyStream {
   }
 
   /**
-   * Returns the local target of the resource within the stream.
+   * Returns the target of the resource within the stream.
    *
-   * This function should be used in place of calls to realpath() or similar
-   * functions when attempting to determine the location of a file. While
-   * functions like realpath() may return the location of a read-only file, this
-   * method may return a URI or path suitable for writing that is completely
-   * separate from the URI used for reading.
+   * XXX: Effectively copypasta from
+   * \Drupal\Core\StreamWrapper\LocalStream::getTarget(), to facilitate parsing
+   * of the URI.
    *
    * @param null|string $uri
    *   Optional URI.
    *
    * @return string
    *   Returns a string representing a location suitable for writing of a file.
+   *
+   * @see \Drupal\Core\StreamWrapper\LocalStream::getTarget()
    */
   protected function getTarget(?string $uri = NULL) : string {
     if (!isset($uri)) {
