@@ -145,7 +145,7 @@ class Foxml extends ReadOnlyStream {
    *   Optional URI.
    *
    * @return string
-   *   Returns a string representing a location suitable for writing of a file.
+   *   The coordinates of the resource.
    *
    * @see \Drupal\Core\StreamWrapper\LocalStream::getTarget()
    */
