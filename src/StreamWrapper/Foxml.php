@@ -6,7 +6,6 @@ use Drupal\Core\File\FileSystem;
 use Drupal\Core\StreamWrapper\ReadOnlyStream;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\Url;
-
 use Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface;
 use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
 use Psr\Log\LoggerInterface;
@@ -78,10 +77,18 @@ class Foxml extends ReadOnlyStream {
       return FALSE;
     }
     [$subtype, $target_actual] = $exploded;
+    // XXX: If you see this assert() complaining about "styles", you need some
+    // form of image style remapping, to have image style derivatives to be
+    // created under a different, writeable scheme.
     assert(in_array($subtype, ['object', 'datastream']), 'Valid URI.');
 
     try {
-      $path = $this->{"{$subtype}Adapter"}->dereference($target_actual);
+      /** @var \Drupal\foxml\Utility\Fedora3\LowLevelAdapterInterface $adapter */
+      $adapter = match($subtype) {
+        'object' => $this->objectAdapter,
+        'datastream' => $this->datastreamAdapter,
+      };
+      $path = $adapter->dereference($target_actual);
       assert(is_string($path), 'Dereferenced path.');
     }
     catch (\Exception $e) {
