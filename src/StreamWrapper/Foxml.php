@@ -286,7 +286,8 @@ class Foxml extends ReadOnlyStream {
    * {@inheritDoc}
    */
   public function realpath() {
-    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    // XXX: Avoiding spamming via trigger_error() here, as we expect this to be
+    // called from Drupal.
     return FALSE;
   }
 
