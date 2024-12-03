@@ -287,7 +287,8 @@ class Foxml extends ReadOnlyStream {
    */
   public function realpath() {
     // XXX: Avoiding spamming via trigger_error() here, as we expect this to be
-    // called from Drupal.
+    // called legitimately, such as from:
+    // - https://git.drupalcode.org/project/imagemagick/-/blob/218b8bb59225232eb502862c202a7a3849cf0e6e/src/EventSubscriber/ImagemagickEventSubscriber.php#L136
     return FALSE;
   }
 
@@ -295,7 +296,9 @@ class Foxml extends ReadOnlyStream {
    * {@inheritDoc}
    */
   public function dirname($uri = NULL) {
-    trigger_error(__FUNCTION__ . '() not supported for foxml stream wrapper.', E_USER_WARNING);
+    // XXX: Avoiding spamming via trigger_error() here, as we expect this to be
+    // called legitimately, such as from:
+    // - https://github.com/discoverygarden/dgi_migrate/blob/a93b0ce642db6f0ecdde4d184a501c280fb9d2ed/src/Plugin/migrate/process/EnsureNonWritableTrait.php#L52-L56
     return FALSE;
   }
 
