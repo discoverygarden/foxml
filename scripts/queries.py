@@ -6,6 +6,7 @@ queries = {
             ?obj <info:fedora/fedora-system:def/model#hasModel> ?model;
         }
         GROUP BY ?model
+        ORDER BY DESC(?count)
     """,
 
     "object_count": """
@@ -24,17 +25,20 @@ queries = {
             {
                 SELECT ?activeObj
                 WHERE {
-                    ?activeObj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Active> .
+                    ?activeObj <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0> ;
+                               <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Active> .
                 }
             } UNION {
                 SELECT ?deletedObj
                 WHERE {
-                    ?deletedObj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Deleted> .
+                    ?deletedObj <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0> ;
+                                <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Deleted> .
                 }
             } UNION {
                 SELECT ?inactiveObj
                 WHERE {
-                    ?inactiveObj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Inactive> .
+                    ?inactiveObj <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0> ;
+                                 <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Inactive> .
                 }
             }
         }
@@ -44,7 +48,8 @@ queries = {
         SELECT ?obj
         FROM <#ri>
         WHERE {
-            ?obj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Deleted>
+            ?obj <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0> ;
+                 <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Deleted>
         }
     """,
 
@@ -52,7 +57,8 @@ queries = {
         SELECT ?obj
         FROM <#ri>
         WHERE {
-            ?obj <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Inactive>
+            ?obj <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0> ;
+                 <info:fedora/fedora-system:def/model#state> <info:fedora/fedora-system:def/model#Inactive>
         }
     """,
 
@@ -67,6 +73,7 @@ queries = {
             }
         }
         GROUP BY ?datastream
+        ORDER BY DESC(?count)
     """,
 
     "owner_distribution": """
@@ -76,6 +83,7 @@ queries = {
             ?obj <info:fedora/fedora-system:def/model#ownerId> ?owner;
         }
         GROUP BY ?owner
+        ORDER BY DESC(?count)
     """,
 
     "collection_distribution": """
@@ -86,6 +94,7 @@ queries = {
             ?collection <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0>
         }
         GROUP BY ?collection
+        ORDER BY DESC(?count)
     """,
 
     "relationships": """
@@ -118,5 +127,6 @@ queries = {
             ?o <info:fedora/fedora-system:def/view#mimeType> ?mimetype
         }
         GROUP BY ?mimetype
+        ORDER BY DESC(?count)
     """
 }
