@@ -107,17 +107,27 @@ queries = {
     """,
 
     "orphaned_objects": """
-        SELECT DISTINCT ?orphan
+        SELECT DISTINCT ?object ?title
         FROM <#ri>
         WHERE {
-            ?orphan <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0>
-            FILTER NOT EXISTS {
-                ?orphan <info:fedora/fedora-system:def/relations-external#isMemberOf> ?subject .
+          # Get all objects with parent-like relationships
+            ?object <fedora-model:hasModel> <info:fedora/fedora-system:FedoraObject-3.0> ;
+                    <fedora-model:label> ?title .
+
+            VALUES ?p {
+                <fedora-rels-ext:isMemberOfCollection>
+                <fedora-rels-ext:isMemberOf>
+                <fedora-rels-ext:isConstituentOf>
             }
+
+            ?object ?p ?otherobject .
+
+            # Exclude if the other object actually exists (i.e., has a model)
             FILTER NOT EXISTS {
-                ?orphan <info:fedora/fedora-system:def/relations-external#isMemberOfCollection> ?subject .
+                ?otherobject <fedora-model:hasModel> ?anyModel .
             }
         }
+        ORDER BY ?object
     """,
 
     "mimetype_distribution": """
@@ -127,6 +137,19 @@ queries = {
             ?o <info:fedora/fedora-system:def/view#mimeType> ?mimetype
         }
         GROUP BY ?mimetype
+        ORDER BY DESC(?count)
+    """,
+
+    "namespace_distribution": """
+        SELECT ?namespace (COUNT(?namespace) as ?count)
+        FROM <#ri>
+        WHERE {
+            ?obj <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:FedoraObject-3.0> .
+              FILTER STRSTARTS(STR(?obj), "info:fedora/")
+              BIND(STRAFTER(STR(?obj), "info:fedora/") AS ?after)
+              BIND(STRBEFORE(?after, ":") AS ?namespace)
+        }
+        GROUP BY ?namespace
         ORDER BY DESC(?count)
     """
 }
