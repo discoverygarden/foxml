@@ -79,9 +79,9 @@ def update_foxml_datastream(input_path, output_path, dsid, content_file, label, 
         last_version = versions[-1] if versions else None
         version_num = len(versions)
         if last_version is not None:
-             last_version.tail = '\n' + version_indent
+            last_version.tail = '\n' + version_indent
         else:
-             datastream.text = '\n' + version_indent
+            datastream.text = '\n' + version_indent
 
     new_version_id = f"{dsid}.{version_num}"
     now = datetime.utcnow()
