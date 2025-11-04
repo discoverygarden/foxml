@@ -67,7 +67,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
   /**
    * {@inheritdoc}
    */
-  public function rewind() {
+  public function rewind() : void {
     // XXX: "rewind()" by recreating the underlying iterator, since we make
     // use of the generator business.
     unset($this->iterator);
@@ -211,7 +211,7 @@ class Foxml extends SourcePluginBase implements ContainerFactoryPluginInterface 
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep() : array {
     $vars = parent::__sleep();
 
     $to_suppress = [
