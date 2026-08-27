@@ -3,7 +3,7 @@ foxml.download_actual:
   # XXX: Adapted from `system.private_file_download`
   path: '/_foxml/{scheme}'
   defaults:
-    _controller: '\Drupal\system\FileDownloadController::download'
+    _controller: '\Drupal\foxml\FileDownloadController::download'
     scheme: foxml
   requirements:
     _permission: 'access referenced foxml+access content'
@@ -11,7 +11,7 @@ foxml.download:
   # XXX: Adapted from `system.private_file_download`
   path: '/_foxml/{filepath}'
   defaults:
-    _controller: '\Drupal\system\FileDownloadController::download'
+    _controller: '\Drupal\foxml\FileDownloadController::download'
     scheme: foxml
   requirements:
     filepath: .+

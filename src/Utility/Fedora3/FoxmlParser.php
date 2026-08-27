@@ -107,9 +107,8 @@ class FoxmlParser extends AbstractParser {
     $this->parser = xml_parser_create_ns();
     xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, FALSE);
     xml_parser_set_option($this->parser, XML_OPTION_SKIP_WHITE, TRUE);
-    xml_set_object($this->parser, $this);
-    xml_set_element_handler($this->parser, 'tagOpen', 'tagClose');
-    xml_set_character_data_handler($this->parser, 'characters');
+    xml_set_element_handler($this->parser, $this->tagOpen(...), $this->tagClose(...));
+    xml_set_character_data_handler($this->parser, $this->characters(...));
   }
 
   /**

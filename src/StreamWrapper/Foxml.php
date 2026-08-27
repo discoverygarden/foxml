@@ -5,6 +5,7 @@ namespace Drupal\foxml\StreamWrapper;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\StreamWrapper\ReadOnlyStream;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Url;
 use Drupal\foxml\Utility\Fedora3\DatastreamLowLevelAdapterInterface;
 use Drupal\foxml\Utility\Fedora3\ObjectLowLevelAdapterInterface;
@@ -13,7 +14,7 @@ use Psr\Log\LoggerInterface;
 /**
  * FOXML stream wrapper.
  */
-class Foxml extends ReadOnlyStream {
+class Foxml extends ReadOnlyStream implements FoxmlInterface {
 
   use NotWritableTrait;
 
@@ -46,6 +47,13 @@ class Foxml extends ReadOnlyStream {
   protected LoggerInterface $logger;
 
   /**
+   * Drupal's stream wrapper manager service.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected StreamWrapperManagerInterface $streamWrapperManager;
+
+  /**
    * Constructor.
    *
    * Note this cannot take any arguments; PHP's stream wrapper users
@@ -58,6 +66,7 @@ class Foxml extends ReadOnlyStream {
     $this->objectAdapter = \Drupal::service('foxml.parser.object_lowlevel_storage');
     $this->fileSystem = \Drupal::service('file_system');
     $this->logger = \Drupal::service('logger.channel.foxml');
+    $this->streamWrapperManager = \Drupal::service('stream_wrapper_manager');
     // phpcs:enable
   }
 
@@ -299,6 +308,17 @@ class Foxml extends ReadOnlyStream {
     // XXX: Avoiding spamming via trigger_error() here, as we expect this to be
     // called legitimately, such as from:
     // - https://github.com/discoverygarden/dgi_migrate/blob/a93b0ce642db6f0ecdde4d184a501c280fb9d2ed/src/Plugin/migrate/process/EnsureNonWritableTrait.php#L52-L56
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function unwrap() : string|false {
+    $local_path = $this->getLocalPath();
+    if ($this->streamWrapperManager->getViaUri($local_path)) {
+      return $local_path;
+    }
     return FALSE;
   }
 
